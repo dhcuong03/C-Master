@@ -1,0 +1,64 @@
+﻿@model IEnumerable<TestMaster.Models.Question>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Ngân hàng câu hỏi";
+}
+
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">@ViewData["Title"]</h1>
+        <a asp-action="Create" class="btn btn-primary shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Tạo câu hỏi mới
+        </a>
+    </div>
+
+    <!-- Hiển thị thông báo thành công (nếu có) -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+
+    <!-- Bảng dữ liệu -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách câu hỏi</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Nội dung</th>
+                            <th>Kỹ năng</th>
+                            <th>Độ khó</th>
+                            <th>Loại</th>
+                            <th style="width: 200px;">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Content)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Skill.SkillName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Difficulty)</td>
+                                <td>@Html.DisplayFor(modelItem => item.QuestionType)</td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.QuestionId" class="btn btn-warning btn-sm" title="Sửa"><i class="fas fa-edit"></i></a>
+                                    <a asp-action="Details" asp-route-id="@item.QuestionId" class="btn btn-info btn-sm" title="Chi tiết"><i class="fas fa-info-circle"></i></a>
+                                    <a asp-action="Delete" asp-route-id="@item.QuestionId" class="btn btn-danger btn-sm" title="Xóa"><i class="fas fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

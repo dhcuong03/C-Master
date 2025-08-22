@@ -1,0 +1,105 @@
+﻿@model TestMaster.Models.Question
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Tạo câu hỏi mới";
+}
+
+<div class="container-fluid">
+    <h4>@ViewData["Title"]</h4>
+    <hr />
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="Content" class="form-label fw-bold">Nội dung câu hỏi</label>
+                        <textarea asp-for="Content" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Content" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="QuestionType" class="form-label">Loại câu hỏi</label>
+                        <select asp-for="QuestionType" class="form-select" asp-items="ViewBag.QuestionTypeList"></select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="SkillId" class="form-label">Kỹ năng</label>
+                        <select asp-for="SkillId" class="form-select" asp-items="ViewBag.SkillId">
+                            <option value="">-- Chọn kỹ năng --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Difficulty" class="form-label">Độ khó</label>
+                        <select asp-for="Difficulty" class="form-select" asp-items="ViewBag.DifficultyList"></select>
+                    </div>
+                </div>
+
+                <hr />
+
+                <h5>Các lựa chọn trả lời (cho câu hỏi trắc nghiệm)</h5>
+                <div id="answerOptionsContainer">
+                    @for (int i = 0; i < Model.AnswerOptions.Count; i++)
+                    {
+                        <div class="input-group mb-2 answer-option-row">
+                            <div class="input-group-text">
+                                <input asp-for="AnswerOptions[i].IsCorrect" class="form-check-input mt-0" type="checkbox" title="Đánh dấu nếu đây là đáp án đúng" />
+                            </div>
+                            <input asp-for="AnswerOptions[i].OptionText" class="form-control" placeholder="Nội dung lựa chọn thứ @(i + 1)" />
+                            <button type="button" class="btn btn-outline-danger remove-option-btn">Xóa</button>
+                        </div>
+                    }
+                </div>
+                <button type="button" id="addOptionBtn" class="btn btn-success btn-sm mt-2">Thêm lựa chọn</button>
+
+                <hr />
+
+                <div class="form-group mt-4">
+                    <input type="submit" value="Lưu câu hỏi" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            function reindexOptions() {
+                $("#answerOptionsContainer .answer-option-row").each(function(index) {
+                    $(this).find("input").each(function() {
+                        this.name = this.name.replace(/\[\d+\]/, `[${index}]`);
+                        if ($(this).hasClass("form-control")) {
+                            $(this).attr("placeholder", `Nội dung lựa chọn thứ ${index + 1}`);
+                        }
+                    });
+                });
+            }
+
+            $("#addOptionBtn").click(function () {
+                let optionIndex = $("#answerOptionsContainer .answer-option-row").length;
+                var newOptionRow = `
+                    <div class="input-group mb-2 answer-option-row">
+                        <div class="input-group-text">
+                            <input name="AnswerOptions[${optionIndex}].IsCorrect" class="form-check-input mt-0" type="checkbox" value="true" title="Đánh dấu nếu đây là đáp án đúng"/>
+                            <input type="hidden" name="AnswerOptions[${optionIndex}].IsCorrect" value="false" />
+                        </div>
+                        <input name="AnswerOptions[${optionIndex}].OptionText" class="form-control" placeholder="Nội dung lựa chọn thứ ${optionIndex + 1}" />
+                        <button type="button" class="btn btn-outline-danger remove-option-btn">Xóa</button>
+                    </div>`;
+                $("#answerOptionsContainer").append(newOptionRow);
+            });
+
+            $("#answerOptionsContainer").on("click", ".remove-option-btn", function () {
+                $(this).closest(".answer-option-row").remove();
+                reindexOptions();
+            });
+        });
+    </script>
+}

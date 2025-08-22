@@ -1,0 +1,50 @@
+﻿@model TestMaster.Models.Test
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Chi tiết bài test";
+}
+
+<div class="container-fluid">
+    <h4>@ViewData["Title"]: @Model.Title</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header">Thông tin chung</div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-5">Tiêu đề</dt>
+                        <dd class="col-sm-7">@Model.Title</dd>
+
+                        <dt class="col-sm-5">Thời gian</dt>
+                        <dd class="col-sm-7">@Model.DurationMinutes phút</dd>
+
+                        <dt class="col-sm-5">Điểm qua môn</dt>
+                        <dd class="col-sm-7">@Model.PassingScore</dd>
+
+                        <dt class="col-sm-5">Mô tả</dt>
+                        <dd class="col-sm-7">@Model.Description</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header">Danh sách câu hỏi (@Model.Questions.Count câu)</div>
+                <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+                    <ul class="list-group">
+                        @foreach (var question in Model.Questions)
+                        {
+                            <li class="list-group-item">@question.Content</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model.TestId" class="btn btn-warning">Sửa</a>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+    </div>
+</div>

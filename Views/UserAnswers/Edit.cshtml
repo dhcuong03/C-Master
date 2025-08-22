@@ -1,0 +1,69 @@
+﻿@model TestMaster.Models.UserAnswer
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>UserAnswer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="UserAnswerId" />
+            <div class="form-group">
+                <label asp-for="SessionId" class="control-label"></label>
+                <select asp-for="SessionId" class="form-control" asp-items="ViewBag.SessionId"></select>
+                <span asp-validation-for="SessionId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="QuestionId" class="control-label"></label>
+                <select asp-for="QuestionId" class="form-control" asp-items="ViewBag.QuestionId"></select>
+                <span asp-validation-for="QuestionId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ChosenOptionId" class="control-label"></label>
+                <select asp-for="ChosenOptionId" class="form-control" asp-items="ViewBag.ChosenOptionId"></select>
+                <span asp-validation-for="ChosenOptionId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AnswerText" class="control-label"></label>
+                <input asp-for="AnswerText" class="form-control" />
+                <span asp-validation-for="AnswerText" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Score" class="control-label"></label>
+                <input asp-for="Score" class="form-control" />
+                <span asp-validation-for="Score" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GraderNotes" class="control-label"></label>
+                <input asp-for="GraderNotes" class="form-control" />
+                <span asp-validation-for="GraderNotes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GradedBy" class="control-label"></label>
+                <select asp-for="GradedBy" class="form-control" asp-items="ViewBag.GradedBy"></select>
+                <span asp-validation-for="GradedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GradedAt" class="control-label"></label>
+                <input asp-for="GradedAt" class="form-control" />
+                <span asp-validation-for="GradedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,94 @@
+﻿@model TestMaster.Models.CreateTestViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Chỉnh sửa bài test";
+}
+
+<div class="container-fluid">
+    <h4>@ViewData["Title"]</h4>
+    <hr />
+    <form asp-action="Edit" asp-route-id="@Model.Test.TestId">
+        <div class="row">
+            <!-- Cột trái: Thông tin bài test -->
+            <div class="col-lg-4">
+                <div class="card shadow mb-3">
+                    <div class="card-header fw-bold">
+                        1. Chỉnh sửa thông tin chung
+                    </div>
+                    <div class="card-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Test.TestId" />
+
+                        <div class="mb-3">
+                            <label asp-for="Test.Title" class="form-label"></label>
+                            <input asp-for="Test.Title" class="form-control" />
+                            <span asp-validation-for="Test.Title" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Test.Description" class="form-label"></label>
+                            <textarea asp-for="Test.Description" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label asp-for="Test.DurationMinutes" class="form-label">Thời gian (phút)</label>
+                                <input asp-for="Test.DurationMinutes" class="form-control" type="number" />
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label asp-for="Test.PassingScore" class="form-label">Điểm qua môn</label>
+                                <input asp-for="Test.PassingScore" class="form-control" type="number" step="0.1" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột phải: Danh sách câu hỏi -->
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header fw-bold">
+                        2. Cập nhật danh sách câu hỏi
+                    </div>
+                    <div class="card-body" style="max-height: 600px; overflow-y: auto;">
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Chọn</th>
+                                    <th>Nội dung câu hỏi</th>
+                                    <th>Kỹ năng</th>
+                                    <th>Độ khó</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.AllQuestions.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            <input asp-for="AllQuestions[i].IsSelected" type="checkbox" class="form-check-input" />
+                                            <input asp-for="AllQuestions[i].QuestionId" type="hidden" />
+                                            <input asp-for="AllQuestions[i].Content" type="hidden" />
+                                            <input asp-for="AllQuestions[i].SkillName" type="hidden" />
+                                            <input asp-for="AllQuestions[i].Difficulty" type="hidden" />
+                                        </td>
+                                        <td>@Model.AllQuestions[i].Content</td>
+                                        <td><span class="badge bg-info text-dark">@Model.AllQuestions[i].SkillName</span></td>
+                                        <td><span class="badge bg-secondary">@Model.AllQuestions[i].Difficulty</span></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="form-group">
+                    <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

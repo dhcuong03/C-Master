@@ -1,0 +1,57 @@
+﻿@model IEnumerable<TestMaster.Models.Test>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Quản lý bài test";
+}
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">@ViewData["Title"]</h1>
+        <a asp-action="Create" class="btn btn-primary shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Tạo bài test mới
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Tiêu đề</th>
+                            <th class="text-center">Số câu hỏi</th>
+                            <th class="text-center">Thời gian (phút)</th>
+                            <th class="text-center">Điểm qua môn</th>
+                            <th class="text-center">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Title</td>
+                                <td class="text-center">@item.Questions.Count()</td>
+                                <td class="text-center">@item.DurationMinutes</td>
+                                <td class="text-center">@item.PassingScore</td>
+                                <td class="text-center">
+                                    <a asp-action="Edit" asp-route-id="@item.TestId" class="btn btn-warning btn-sm" title="Sửa"><i class="fas fa-edit"></i></a>
+                                    <a asp-action="Details" asp-route-id="@item.TestId" class="btn btn-info btn-sm" title="Chi tiết"><i class="fas fa-info-circle"></i></a>
+                                    <a asp-action="Delete" asp-route-id="@item.TestId" class="btn btn-danger btn-sm" title="Xóa"><i class="fas fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

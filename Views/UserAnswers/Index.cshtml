@@ -1,0 +1,77 @@
+﻿@model IEnumerable<TestMaster.Models.UserAnswer>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AnswerText)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Score)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GraderNotes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GradedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChosenOption)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GradedByNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Question)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Session)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AnswerText)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Score)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GraderNotes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GradedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChosenOption.OptionId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GradedByNavigation.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Question.QuestionId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Session.SessionId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.UserAnswerId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.UserAnswerId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.UserAnswerId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

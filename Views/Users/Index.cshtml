@@ -1,0 +1,161 @@
+﻿@model IEnumerable<TestMaster.Models.User>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="page-title">Danh sách người dùng</h1>
+
+<p>
+    <a class="btn-create" asp-action="Create">+ Thêm mới</a>
+</p>
+
+<table class="custom-table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Username)</th>
+            <th>@Html.DisplayNameFor(model => model.PasswordHash)</th>
+            <th>@Html.DisplayNameFor(model => model.FullName)</th>
+            <th>@Html.DisplayNameFor(model => model.Email)</th>
+            <th>@Html.DisplayNameFor(model => model.CreatedAt)</th>
+            <th>@Html.DisplayNameFor(model => model.UpdatedAt)</th>
+            <th>@Html.DisplayNameFor(model => model.Department)</th>
+            <th>@Html.DisplayNameFor(model => model.Level)</th>
+            <th>@Html.DisplayNameFor(model => model.Role)</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Username)</td>
+                <td>@Html.DisplayFor(modelItem => item.PasswordHash)</td>
+                <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
+                <td>@Html.DisplayFor(modelItem => item.UpdatedAt)</td>
+                <td>@Html.DisplayFor(modelItem => item.Department.DepartmentName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Level.LevelName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Role.RoleName)</td>
+                <td>
+                    <a class="btn-action btn-edit" asp-action="Edit" asp-route-id="@item.UserId">Sửa</a>
+                    <a class="btn-action btn-detail" asp-action="Details" asp-route-id="@item.UserId">Chi tiết</a>
+                    <a class="btn-action btn-delete" asp-action="Delete" asp-route-id="@item.UserId">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<style>
+    .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 25px;
+        color: #2c3e50;
+        border-left: 5px solid #27ae60;
+        padding-left: 10px;
+    }
+
+    .btn-create {
+        display: inline-block;
+        padding: 10px 18px;
+        background: linear-gradient(135deg, #27ae60, #2ecc71);
+        color: #fff;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: 0.3s;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    }
+
+        .btn-create:hover {
+            background: linear-gradient(135deg, #219150, #27ae60);
+            transform: translateY(-2px);
+        }
+
+    /* Table */
+    .custom-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+        background-color: #fff;
+        margin-top: 15px;
+    }
+
+        .custom-table thead {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: #fff;
+        }
+
+        .custom-table th,
+        .custom-table td {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .custom-table th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        .custom-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .custom-table tbody tr:hover {
+            background-color: #eef6ff;
+            transition: 0.2s;
+        }
+
+    /* Action Buttons */
+    .btn-action {
+        display: inline-block;
+        padding: 8px 14px;
+        margin-right: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 6px;
+        text-decoration: none;
+        color: #fff;
+        transition: 0.3s;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+
+    .btn-edit {
+        background-color: #3498db;
+    }
+
+        .btn-edit:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+    .btn-detail {
+        background-color: #8e44ad;
+    }
+
+        .btn-detail:hover {
+            background-color: #71368a;
+            transform: scale(1.05);
+        }
+
+    .btn-delete {
+        background-color: #e74c3c;
+    }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+        }
+
+</style>

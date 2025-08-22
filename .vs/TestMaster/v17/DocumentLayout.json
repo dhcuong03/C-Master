@@ -1,0 +1,681 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\admindashboard\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\admindashboard\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\controllers\\admindashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:controllers\\admindashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\viewmodels\\admindashboardviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:viewmodels\\admindashboardviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\models\\answeroption.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:models\\answeroption.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\shared\\_adminlayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\shared\\_adminlayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\departments\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\departments\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\departments\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\departments\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\departments\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\departments\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\departments\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\departments\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\departments\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\departments\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\controllers\\departmentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:controllers\\departmentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\models\\createtestviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:models\\createtestviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\controllers\\testscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:controllers\\testscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\tests\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\tests\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\tests\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\tests\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\tests\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\tests\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\tests\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\tests\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\models\\test.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:models\\test.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\users\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\users\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\questions\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\questions\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\questions\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\questions\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\controllers\\questionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:controllers\\questionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\models\\question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:models\\question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\users\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\users\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\models\\employeeassessmentcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:models\\employeeassessmentcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\users\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\users\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\users\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\users\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\users\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\users\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\controllers\\usertestsessionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:controllers\\usertestsessionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\controllers\\useranswerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:controllers\\useranswerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|d:\\d\u1EF1 \u00E1n c#\\testmaster\\controllers\\auditlogscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0ADFB3E-635C-4DA2-A4FF-4B01F55C543C}|TestMaster.csproj|solutionrelative:controllers\\auditlogscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 10,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{74946827-37a0-11d2-a273-00c04f8ef4ff}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{e8b06f52-6d01-11d2-aa7d-00c04f990343}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AdminDashboardViewModel.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\ViewModels\\AdminDashboardViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\AdminDashboardViewModel.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\ViewModels\\AdminDashboardViewModel.cs",
+              "RelativeToolTip": "ViewModels\\AdminDashboardViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-22T10:38:33.614Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\AdminDashboard\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\AdminDashboard\\Index.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\AdminDashboard\\Index.cshtml",
+              "RelativeToolTip": "Views\\AdminDashboard\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T10:30:32.953Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Departments\\Delete.cshtml",
+              "RelativeDocumentMoniker": "Views\\Departments\\Delete.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Departments\\Delete.cshtml",
+              "RelativeToolTip": "Views\\Departments\\Delete.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T10:23:38.594Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Departments\\Details.cshtml",
+              "RelativeDocumentMoniker": "Views\\Departments\\Details.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Departments\\Details.cshtml",
+              "RelativeToolTip": "Views\\Departments\\Details.cshtml",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAgwCkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T10:23:29.127Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Departments\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Views\\Departments\\Edit.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Departments\\Edit.cshtml",
+              "RelativeToolTip": "Views\\Departments\\Edit.cshtml",
+              "ViewState": "AgIAABQAAAAAAAAAAAAgwCUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T10:23:18.24Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Departments\\Create.cshtml",
+              "RelativeDocumentMoniker": "Views\\Departments\\Create.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Departments\\Create.cshtml",
+              "RelativeToolTip": "Views\\Departments\\Create.cshtml",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAgwBEAAABZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T10:22:09.419Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Departments\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Departments\\Index.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Departments\\Index.cshtml",
+              "RelativeToolTip": "Views\\Departments\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T10:02:57.65Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Tests\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Views\\Tests\\Edit.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Tests\\Edit.cshtml",
+              "RelativeToolTip": "Views\\Tests\\Edit.cshtml",
+              "ViewState": "AgIAADIAAAAAAAAAAAAgwF4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T09:30:55.635Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Tests\\Details.cshtml",
+              "RelativeDocumentMoniker": "Views\\Tests\\Details.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Tests\\Details.cshtml",
+              "RelativeToolTip": "Views\\Tests\\Details.cshtml",
+              "ViewState": "AgIAABIAAAAAAAAAAAAmwDIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T09:30:17.269Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Tests\\Create.cshtml",
+              "RelativeDocumentMoniker": "Views\\Tests\\Create.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Tests\\Create.cshtml",
+              "RelativeToolTip": "Views\\Tests\\Create.cshtml",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAgwF4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T09:26:08.101Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Tests\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Tests\\Index.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Tests\\Index.cshtml",
+              "RelativeToolTip": "Views\\Tests\\Index.cshtml",
+              "ViewState": "AgIAABcAAAAAAAAAAAAuwDkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T09:25:59.084Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "CreateTestViewModel.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Models\\CreateTestViewModel.cs",
+              "RelativeDocumentMoniker": "Models\\CreateTestViewModel.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Models\\CreateTestViewModel.cs",
+              "RelativeToolTip": "Models\\CreateTestViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-22T09:18:54.762Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "TestsController.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\TestsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\TestsController.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\TestsController.cs",
+              "RelativeToolTip": "Controllers\\TestsController.cs",
+              "ViewState": "AgIAALEAAAAAAAAAAADwv80AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-22T09:14:40.737Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "Test.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Models\\Test.cs",
+              "RelativeDocumentMoniker": "Models\\Test.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Models\\Test.cs",
+              "RelativeToolTip": "Models\\Test.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAIwB8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-22T09:11:25.278Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Users\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Users\\Index.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Users\\Index.cshtml",
+              "RelativeToolTip": "Views\\Users\\Index.cshtml",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAABsAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T08:42:40.815Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T08:42:33.136Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AnswerOption.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Models\\AnswerOption.cs",
+              "RelativeDocumentMoniker": "Models\\AnswerOption.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Models\\AnswerOption.cs",
+              "RelativeToolTip": "Models\\AnswerOption.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAywBYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-22T08:25:32.338Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAcwDAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-22T07:46:31.566Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "EmployeeAssessmentContext.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Models\\EmployeeAssessmentContext.cs",
+              "RelativeDocumentMoniker": "Models\\EmployeeAssessmentContext.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Models\\EmployeeAssessmentContext.cs",
+              "RelativeToolTip": "Models\\EmployeeAssessmentContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHQBAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-22T07:29:50.399Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "Question.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Models\\Question.cs",
+              "RelativeDocumentMoniker": "Models\\Question.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Models\\Question.cs",
+              "RelativeToolTip": "Models\\Question.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAB8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-22T07:16:50.513Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Questions\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Questions\\Index.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Questions\\Index.cshtml",
+              "RelativeToolTip": "Views\\Questions\\Index.cshtml",
+              "ViewState": "AgIAABcAAAAAAAAAAAAcwEAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T07:13:47.245Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Questions\\Create.cshtml",
+              "RelativeDocumentMoniker": "Views\\Questions\\Create.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Questions\\Create.cshtml",
+              "RelativeToolTip": "Views\\Questions\\Create.cshtml",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAAAFgAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T07:12:45.344Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Users\\Create.cshtml",
+              "RelativeDocumentMoniker": "Views\\Users\\Create.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Users\\Create.cshtml",
+              "RelativeToolTip": "Views\\Users\\Create.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T06:49:55.625Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Users\\Delete.cshtml",
+              "RelativeDocumentMoniker": "Views\\Users\\Delete.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Users\\Delete.cshtml",
+              "RelativeToolTip": "Views\\Users\\Delete.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T06:49:49.823Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Users\\Details.cshtml",
+              "RelativeDocumentMoniker": "Views\\Users\\Details.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Users\\Details.cshtml",
+              "RelativeToolTip": "Views\\Users\\Details.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T06:49:44.851Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Users\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Views\\Users\\Edit.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Users\\Edit.cshtml",
+              "RelativeToolTip": "Views\\Users\\Edit.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T06:49:39.168Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AdminDashboardController.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\AdminDashboardController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AdminDashboardController.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\AdminDashboardController.cs",
+              "RelativeToolTip": "Controllers\\AdminDashboardController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-22T06:45:44.644Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T06:43:55.659Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "_AdminLayout.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Shared\\_AdminLayout.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_AdminLayout.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Shared\\_AdminLayout.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_AdminLayout.cshtml",
+              "ViewState": "AgIAAGUAAAAAAAAAAAAcwKoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T06:43:30.314Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Account\\Login.cshtml",
+              "RelativeDocumentMoniker": "Views\\Account\\Login.cshtml",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Views\\Account\\Login.cshtml",
+              "RelativeToolTip": "Views\\Account\\Login.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-22T03:10:26.938Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "Controllers\\AccountController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-22T03:04:23.736Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "UserTestSessionsController.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\UserTestSessionsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\UserTestSessionsController.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\UserTestSessionsController.cs",
+              "RelativeToolTip": "Controllers\\UserTestSessionsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-22T02:48:47.068Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "UserAnswersController.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\UserAnswersController.cs",
+              "RelativeDocumentMoniker": "Controllers\\UserAnswersController.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\UserAnswersController.cs",
+              "RelativeToolTip": "Controllers\\UserAnswersController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-22T02:47:57.375Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "QuestionsController.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\QuestionsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\QuestionsController.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\QuestionsController.cs",
+              "RelativeToolTip": "Controllers\\QuestionsController.cs",
+              "ViewState": "AgIAADcAAAAAAAAAAAAowEMAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-22T02:41:26.332Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "DepartmentsController.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\DepartmentsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\DepartmentsController.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\DepartmentsController.cs",
+              "RelativeToolTip": "Controllers\\DepartmentsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-22T02:39:06.684Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "AuditLogsController.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\AuditLogsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AuditLogsController.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\AuditLogsController.cs",
+              "RelativeToolTip": "Controllers\\AuditLogsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-22T02:38:31.202Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
+              "ToolTip": "D:\\D\u1EF1 \u00C1n C#\\TestMaster\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "Controllers\\UsersController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAALsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-22T02:36:58.922Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
