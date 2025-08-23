@@ -14,7 +14,7 @@
         </a>
     </div>
 
-    <!-- Hiển thị thông báo thành công (nếu có) -->
+    <!-- Hiển thị thông báo (nếu có) -->
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -22,6 +22,36 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Form Import Excel -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Tiện ích</h6>
+        </div>
+        <div class="card-body">
+            <form asp-action="ImportFromExcel" asp-controller="Questions" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label for="file" class="font-weight-bold">Import câu hỏi từ file Excel (.xlsx):</label>
+                    <div class="input-group">
+                        <input type="file" name="file" class="form-control-file" accept=".xlsx" required />
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-info">
+                                <i class="fas fa-file-import fa-sm text-white-50"></i> Tải lên
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
 
     <!-- Bảng dữ liệu -->

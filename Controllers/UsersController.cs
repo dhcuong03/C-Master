@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using TestMaster.Models; // Sửa lại namespace cho đúng với project của bạn
+using TestMaster.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
+using System.Linq;
 
-namespace TestMaster.Controllers // Sửa lại namespace cho đúng với project của bạn
+namespace TestMaster.Controllers
 {
     [Authorize(Roles = "Admin,HR")]
     public class UsersController : Controller
     {
         private readonly EmployeeAssessmentContext _context;
 
-        // ĐÃ SỬA LẠI TÊN CONTEXT CHO ĐÚNG
         public UsersController(EmployeeAssessmentContext context)
         {
             _context = context;
@@ -27,28 +28,19 @@ namespace TestMaster.Controllers // Sửa lại namespace cho đúng với proje
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) return NotFound();
             var user = await _context.Users
                 .Include(u => u.Department)
                 .Include(u => u.Level)
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(m => m.UserId == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
+            if (user == null) return NotFound();
             return View(user);
         }
 
         // GET: Users/Create
         public IActionResult Create()
         {
-            // Tải dữ liệu cho dropdown, hiển thị tên thay vì ID
             ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentName");
             ViewData["LevelId"] = new SelectList(_context.Levels, "LevelId", "LevelName");
             ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName");
@@ -60,22 +52,20 @@ namespace TestMaster.Controllers // Sửa lại namespace cho đúng với proje
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Username,PasswordHash,FullName,Email,RoleId,DepartmentId,LevelId")] User user)
         {
-            // Bỏ qua validate cho các đối tượng liên quan để tránh lỗi
             ModelState.Remove("Role");
             ModelState.Remove("Department");
             ModelState.Remove("Level");
 
             if (ModelState.IsValid)
             {
-                // LƯU Ý: Cần hash mật khẩu ở đây trong thực tế
-                // user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
+                // Mã hóa mật khẩu khi tạo mới
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
 
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            // Nếu model không hợp lệ, tải lại dữ liệu dropdown
             ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentName", user.DepartmentId);
             ViewData["LevelId"] = new SelectList(_context.Levels, "LevelId", "LevelName", user.LevelId);
             ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", user.RoleId);
@@ -85,16 +75,13 @@ namespace TestMaster.Controllers // Sửa lại namespace cho đúng với proje
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) return NotFound();
             var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return NotFound();
+
+            // Để trống ô mật khẩu khi edit để tránh hiển thị hash
+            user.PasswordHash = "";
+
             ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentName", user.DepartmentId);
             ViewData["LevelId"] = new SelectList(_context.Levels, "LevelId", "LevelName", user.LevelId);
             ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", user.RoleId);
@@ -104,63 +91,63 @@ namespace TestMaster.Controllers // Sửa lại namespace cho đúng với proje
         // POST: Users/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,Username,PasswordHash,FullName,Email,RoleId,DepartmentId,LevelId")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,Username,PasswordHash,FullName,Email,RoleId,DepartmentId,LevelId")] User userFromForm)
         {
-            if (id != user.UserId)
-            {
-                return NotFound();
-            }
+            if (id != userFromForm.UserId) return NotFound();
 
             ModelState.Remove("Role");
             ModelState.Remove("Department");
             ModelState.Remove("Level");
 
+            // Bỏ qua validation cho PasswordHash vì nó có thể để trống
+            ModelState.Remove("PasswordHash");
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // LƯU Ý: Cần có logic xử lý việc có thay đổi mật khẩu hay không
-                    // Ví dụ: chỉ cập nhật mật khẩu nếu người dùng nhập mật khẩu mới.
-                    _context.Update(user);
+                    var userToUpdate = await _context.Users.FindAsync(id);
+                    if (userToUpdate == null) return NotFound();
+
+                    // Cập nhật các thông tin cơ bản
+                    userToUpdate.Username = userFromForm.Username;
+                    userToUpdate.FullName = userFromForm.FullName;
+                    userToUpdate.Email = userFromForm.Email;
+                    userToUpdate.RoleId = userFromForm.RoleId;
+                    userToUpdate.DepartmentId = userFromForm.DepartmentId;
+                    userToUpdate.LevelId = userFromForm.LevelId;
+
+                    // Chỉ cập nhật mật khẩu nếu admin nhập mật khẩu mới
+                    if (!string.IsNullOrEmpty(userFromForm.PasswordHash))
+                    {
+                        userToUpdate.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userFromForm.PasswordHash);
+                    }
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.UserId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!UserExists(userFromForm.UserId)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentName", user.DepartmentId);
-            ViewData["LevelId"] = new SelectList(_context.Levels, "LevelId", "LevelName", user.LevelId);
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", user.RoleId);
-            return View(user);
+            ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentName", userFromForm.DepartmentId);
+            ViewData["LevelId"] = new SelectList(_context.Levels, "LevelId", "LevelName", userFromForm.LevelId);
+            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", userFromForm.RoleId);
+            return View(userFromForm);
         }
 
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) return NotFound();
             var user = await _context.Users
                 .Include(u => u.Department)
                 .Include(u => u.Level)
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(m => m.UserId == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
+            if (user == null) return NotFound();
             return View(user);
         }
 
@@ -170,11 +157,7 @@ namespace TestMaster.Controllers // Sửa lại namespace cho đúng với proje
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var user = await _context.Users.FindAsync(id);
-            if (user != null)
-            {
-                _context.Users.Remove(user);
-            }
-
+            if (user != null) _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

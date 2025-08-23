@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using TestMaster.Models;
 
 namespace TestMaster.Controllers
@@ -71,6 +76,106 @@ namespace TestMaster.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // POST: Questions/ImportFromExcel
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ImportFromExcel(IFormFile file)
+        {
+            if (file == null || file.Length <= 0)
+            {
+                TempData["ErrorMessage"] = "Vui lòng chọn một file Excel.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var questionsToImport = new List<Question>();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            var currentUserId = User.FindFirst("UserId")?.Value;
+            int? createdById = null;
+            if (currentUserId != null)
+            {
+                createdById = int.Parse(currentUserId);
+            }
+
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);
+                using (var package = new ExcelPackage(stream))
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
+                    if (worksheet == null)
+                    {
+                        TempData["ErrorMessage"] = "File Excel không hợp lệ.";
+                        return RedirectToAction(nameof(Index));
+                    }
+
+                    var rowCount = worksheet.Dimension.Rows;
+
+                    for (int row = 2; row <= rowCount; row++)
+                    {
+                        try
+                        {
+                            string content = worksheet.Cells[row, 1].Value?.ToString().Trim();
+                            if (string.IsNullOrEmpty(content)) continue;
+
+                            var question = new Question
+                            {
+                                Content = content,
+                                QuestionType = worksheet.Cells[row, 2].Value?.ToString().Trim(),
+                                Difficulty = worksheet.Cells[row, 3].Value?.ToString().Trim(),
+                                CreatedAt = DateTime.Now,
+                                UpdatedAt = DateTime.Now,
+                                CreatedBy = createdById,
+                                AnswerOptions = new List<AnswerOption>()
+                            };
+
+                            string skillIdString = worksheet.Cells[row, 4].Value?.ToString().Trim();
+                            if (int.TryParse(skillIdString, out int parsedSkillId))
+                            {
+                                question.SkillId = parsedSkillId;
+                            }
+
+                            for (int col = 5; col <= worksheet.Dimension.Columns; col += 2)
+                            {
+                                var optionText = worksheet.Cells[row, col].Value?.ToString().Trim();
+                                var isCorrectString = worksheet.Cells[row, col + 1].Value?.ToString().Trim();
+
+                                if (string.IsNullOrEmpty(optionText)) break;
+
+                                bool.TryParse(isCorrectString, out bool isCorrect);
+
+                                question.AnswerOptions.Add(new AnswerOption
+                                {
+                                    OptionText = optionText,
+                                    IsCorrect = isCorrect
+                                });
+                            }
+
+                            questionsToImport.Add(question);
+                        }
+                        catch (Exception)
+                        {
+                            TempData["ErrorMessage"] = $"Định dạng dữ liệu ở dòng {row} không hợp lệ. Vui lòng kiểm tra lại.";
+                            return RedirectToAction(nameof(Index));
+                        }
+                    }
+                }
+            }
+
+            if (questionsToImport.Any())
+            {
+                await _context.Questions.AddRangeAsync(questionsToImport);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = $"Đã import thành công {questionsToImport.Count} câu hỏi.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy dữ liệu hợp lệ trong file Excel.";
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
         // GET: Questions/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -95,22 +200,19 @@ namespace TestMaster.Controllers
         {
             if (id != question.QuestionId) return NotFound();
 
-            // Lấy các đáp án cũ từ CSDL để xóa
-            var existingOptions = _context.AnswerOptions.AsNoTracking().Where(ao => ao.QuestionId == id);
+            var existingOptions = _context.AnswerOptions.Where(ao => ao.QuestionId == id);
             _context.AnswerOptions.RemoveRange(existingOptions);
 
-            // Lọc và thêm các đáp án mới từ form
             question.AnswerOptions = question.AnswerOptions.Where(opt => !string.IsNullOrWhiteSpace(opt.OptionText)).ToList();
             foreach (var option in question.AnswerOptions)
             {
-                option.QuestionId = id; // Đảm bảo khóa ngoại đúng
+                option.QuestionId = id;
                 _context.AnswerOptions.Add(option);
             }
 
             try
             {
                 _context.Update(question);
-                // Báo cho EF không theo dõi lại các đáp án (vì ta đã xử lý riêng)
                 _context.Entry(question).Collection(q => q.AnswerOptions).IsModified = false;
                 await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Cập nhật câu hỏi thành công!";

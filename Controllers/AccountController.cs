@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using TestMaster.Models; // Thay YourProjectName
+using TestMaster.Models;
 
 public class AccountController : Controller
 {
@@ -21,7 +21,11 @@ public class AccountController : Controller
     {
         if (User.Identity.IsAuthenticated)
         {
-            return RedirectToAction("Index", "Home");
+            if (User.IsInRole("Admin") || User.IsInRole("HR") || User.IsInRole("Manager"))
+            {
+                return RedirectToAction("Index", "AdminDashboard");
+            }
+            return RedirectToAction("Index", "EmployeeDashboard");
         }
         return View();
     }
@@ -41,7 +45,23 @@ public class AccountController : Controller
                                  .Include(u => u.Role)
                                  .FirstOrDefaultAsync(u => u.Username == username);
 
-        if (user == null || user.PasswordHash != password)
+        if (user == null)
+        {
+            ViewData["ErrorMessage"] = "Tên đăng nhập hoặc mật khẩu không đúng.";
+            return View();
+        }
+
+        bool isPasswordValid;
+        try
+        {
+            isPasswordValid = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
+        }
+        catch (BCrypt.Net.SaltParseException)
+        {
+            isPasswordValid = (user.PasswordHash == password);
+        }
+
+        if (!isPasswordValid)
         {
             ViewData["ErrorMessage"] = "Tên đăng nhập hoặc mật khẩu không đúng.";
             return View();
@@ -56,23 +76,24 @@ public class AccountController : Controller
         };
 
         var claimsIdentity = new ClaimsIdentity(claims, "MyCookieAuth");
-        var authProperties = new AuthenticationProperties { };
 
-        await HttpContext.SignInAsync("MyCookieAuth", new ClaimsPrincipal(claimsIdentity), authProperties);
-
-        // Trong hàm Login, tìm đến đoạn switch
-        switch (user.Role.RoleName)
+        // ✅ Cookie session (mất khi tắt trình duyệt)
+        var authProperties = new AuthenticationProperties
         {
-            case "Admin":
-            case "HR":
-            case "Manager":
-                // THAY ĐỔI Ở ĐÂY
-                return RedirectToAction("Index", "AdminDashboard");
-            case "Employee":
-                return RedirectToAction("Index", "EmployeeDashboard");
-            default:
-                return RedirectToAction("Index", "Home");
-        }
+            IsPersistent = false // 🔑 quan trọng
+        };
+
+        await HttpContext.SignInAsync("MyCookieAuth",
+            new ClaimsPrincipal(claimsIdentity),
+            authProperties);
+
+        // Điều hướng theo Role
+        return user.Role.RoleName switch
+        {
+            "Admin" or "HR" or "Manager" => RedirectToAction("Index", "AdminDashboard"),
+            "Employee" => RedirectToAction("Index", "EmployeeDashboard"),
+            _ => RedirectToAction("Index", "Home")
+        };
     }
 
     // GET: /Account/Logout

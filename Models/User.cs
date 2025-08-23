@@ -25,6 +25,11 @@ public partial class User
 
     public DateTime? UpdatedAt { get; set; }
 
+    //// ===== THÊM 2 DÒNG NÀY VÀO =====
+    //public string? PasswordResetToken { get; set; }
+    //public DateTime? ResetTokenExpires { get; set; }
+    //// =================================
+
     public virtual ICollection<AuditLog> AuditLogs { get; set; } = new List<AuditLog>();
 
     public virtual Department? Department { get; set; }

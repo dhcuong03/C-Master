@@ -1,31 +1,112 @@
-﻿@{
-    ViewData["Title"] = "Bảng điều khiển Nhân viên";
+﻿@model TestMaster.ViewModels.ProfileViewEmployee
+
+@{
+    ViewData["Title"] = "Bảng điều khiển";
+    Layout = "~/Views/Shared/_EmployeeLayout.cshtml";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Chào mừng trở lại, @ViewBag.FullName!</h1>
-    <p>Đây là trang dành cho nhân viên.</p>
-    <hr />
+<div class="container-fluid">
+    <!-- TIÊU ĐỀ TRANG ĐÃ ĐƯỢC CẬP NHẬT VỚI CÁC NÚT CHỨC NĂNG -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Chào mừng trở lại, @Model.UserProfile.FullName!</h1>
+        <div>
+            <a asp-action="EditProfile" class="btn btn-sm btn-primary shadow-sm mr-2">
+                <i class="fas fa-user-edit fa-sm text-white-50"></i> Chỉnh sửa hồ sơ
+            </a>
+            <a asp-action="ChangePassword" class="btn btn-sm btn-secondary shadow-sm">
+                <i class="fas fa-key fa-sm text-white-50"></i> Đổi mật khẩu
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="card">
+        <!-- Thông tin cá nhân (Dạng chỉ đọc) -->
+        <div class="col-xl-6 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Thông tin cá nhân</h6></div>
                 <div class="card-body">
-                    <h5 class="card-title">Bài test được giao</h5>
-                    <p class="card-text">Xem danh sách các bài test bạn cần hoàn thành.</p>
-                    <a href="#" class="btn btn-primary">Xem danh sách</a>
+                    <dl class="row">
+                        <dt class="col-sm-4">Họ và tên</dt>
+                        <dd class="col-sm-8">@Model.UserProfile.FullName</dd>
+
+                        <dt class="col-sm-4">Email</dt>
+                        <dd class="col-sm-8">@Model.UserProfile.Email</dd>
+
+                        <dt class="col-sm-4">Vai trò</dt>
+                        <dd class="col-sm-8">@Model.UserProfile.Role.RoleName</dd>
+
+                        <dt class="col-sm-4">Cấp bậc</dt>
+                        <dd class="col-sm-8">@Model.UserProfile.Level.LevelName</dd>
+
+                        <dt class="col-sm-4">Phòng ban</dt>
+                        <dd class="col-sm-8">@Model.UserProfile.Department.DepartmentName</dd>
+                    </dl>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card">
+
+        <!-- Lịch sử làm bài -->
+        <div class="col-xl-6 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Lịch sử làm bài</h6></div>
                 <div class="card-body">
-                    <h5 class="card-title">Lịch sử làm bài</h5>
-                    <p class="card-text">Xem lại kết quả các bài test bạn đã làm trước đây.</p>
-                    <a href="#" class="btn btn-secondary">Xem lịch sử</a>
+                    @if (Model.TestHistory.Any())
+                    {
+                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Bài thi</th>
+                                        <th>Ngày làm</th>
+                                        <th>Điểm</th>
+                                        <th>Kết quả</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.TestHistory)
+                                    {
+                                        <tr>
+                                            <td>@item.Test.Title</td>
+                                            <td>@item.StartTime?.ToString("dd/MM/yyyy")</td>
+                                            <td>@item.FinalScore</td>
+                                            <td>
+                                                @if (item.IsPassed == true)
+                                                {
+                                                    <span class="badge badge-success">Đạt</span>
+                                                }
+                                                else if (item.IsPassed == false)
+                                                {
+
+                                                    <span class="badge badge-danger">Không đạt</span>
+                                                }
+                                                else
+                                                {
+
+                                                    <span class="badge badge-secondary">Chưa chấm</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+
+                        <p>Bạn chưa có lịch sử làm bài nào.</p>
+                    }
                 </div>
             </div>
         </div>
     </div>
 </div>
-
