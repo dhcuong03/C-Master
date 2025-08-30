@@ -21,7 +21,8 @@ namespace TestMaster.Controllers
             _context = context;
         }
 
-        // Action StartTest không thay đổi
+        // ... (Các action StartTest, TakeTest, SaveAnswer không thay đổi) ...
+        #region Unchanged Actions
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> StartTest(int testId)
@@ -51,7 +52,6 @@ namespace TestMaster.Controllers
             return RedirectToAction("TakeTest", new { sessionId = newSession.SessionId });
         }
 
-        // === CẬP NHẬT: Tải lại các câu trả lời đã lưu ===
         [HttpGet]
         public async Task<IActionResult> TakeTest(int sessionId)
         {
@@ -62,7 +62,6 @@ namespace TestMaster.Controllers
                 .Include(s => s.Test)
                     .ThenInclude(t => t.Questions)
                         .ThenInclude(q => q.AnswerOptions)
-                // Tải kèm các câu trả lời đã được lưu
                 .Include(s => s.UserAnswers)
                 .FirstOrDefaultAsync(s => s.SessionId == sessionId && s.UserId == userId);
 
@@ -77,16 +76,15 @@ namespace TestMaster.Controllers
             if (timeRemaining <= 0)
             {
                 TempData["InfoMessage"] = "Đã hết giờ làm bài. Bài của bạn đã được nộp tự động.";
-                return await ProcessAndSubmitTest(session.SessionId);
+                return await ProcessAndSubmitTest(session.SessionId, new List<UserAnswerInput>());
             }
 
-            // Tạo ViewModel và điền các câu trả lời đã lưu vào
             var viewModel = new TakeTestViewModel
             {
                 SessionId = session.SessionId,
                 Test = session.Test,
                 TimeRemainingInSeconds = timeRemaining,
-                UserAnswers = session.Test.Questions.Select(q => {
+                UserAnswers = session.Test.Questions.OrderBy(q => q.QuestionId).Select(q => {
                     var savedAnswer = session.UserAnswers.FirstOrDefault(ua => ua.QuestionId == q.QuestionId);
                     return new UserAnswerInput
                     {
@@ -100,12 +98,10 @@ namespace TestMaster.Controllers
             return View(viewModel);
         }
 
-        // === HÀM MỚI: Action để tự động lưu từng câu trả lời ===
         [HttpPost]
         public async Task<IActionResult> SaveAnswer([FromBody] UserAnswerInput answerInput)
         {
             if (answerInput == null) return BadRequest();
-
             var userIdString = User.FindFirstValue("UserId");
             if (!int.TryParse(userIdString, out var userId)) { return Unauthorized(); }
 
@@ -141,17 +137,17 @@ namespace TestMaster.Controllers
             await _context.SaveChangesAsync();
             return Json(new { success = true });
         }
+        #endregion
 
-        // === CẬP NHẬT: Đơn giản hóa Action này ===
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitTest(TakeTestViewModel viewModel)
         {
-            return await ProcessAndSubmitTest(viewModel.SessionId);
+            return await ProcessAndSubmitTest(viewModel.SessionId, viewModel.UserAnswers);
         }
 
-        // === CẬP NHẬT: Phương thức này giờ sẽ đọc câu trả lời từ DB ===
-        private async Task<IActionResult> ProcessAndSubmitTest(int sessionId)
+        // === PHẦN SỬA LỖI NẰM Ở ĐÂY ===
+        private async Task<IActionResult> ProcessAndSubmitTest(int sessionId, List<UserAnswerInput> submittedAnswers)
         {
             var userIdString = User.FindFirstValue("UserId");
             if (!int.TryParse(userIdString, out var userId)) { return Unauthorized(); }
@@ -160,7 +156,7 @@ namespace TestMaster.Controllers
                 .Include(s => s.Test)
                     .ThenInclude(t => t.Questions)
                         .ThenInclude(q => q.AnswerOptions)
-                .Include(s => s.UserAnswers) // Tải các câu trả lời đã được auto-save
+                .Include(s => s.UserAnswers)
                 .FirstOrDefaultAsync(s => s.SessionId == sessionId && s.UserId == userId);
 
             if (session == null || session.Status != "IN_PROGRESS")
@@ -169,52 +165,86 @@ namespace TestMaster.Controllers
                 return RedirectToAction("MyTests", "EmployeeDashboard");
             }
 
-            // Logic tính điểm dựa trên các câu trả lời đã được lưu
+            // BƯỚC 1: LƯU LẠI TOÀN BỘ CÂU TRẢ LỜI
+            foreach (var submittedAnswer in submittedAnswers)
+            {
+                if (!submittedAnswer.ChosenOptionId.HasValue && string.IsNullOrWhiteSpace(submittedAnswer.AnswerText)) continue;
+
+                var existingAnswer = session.UserAnswers.FirstOrDefault(ua => ua.QuestionId == submittedAnswer.QuestionId);
+                if (existingAnswer != null)
+                {
+                    existingAnswer.ChosenOptionId = submittedAnswer.ChosenOptionId;
+                    existingAnswer.AnswerText = submittedAnswer.AnswerText;
+                }
+                else
+                {
+                    var newAnswer = new UserAnswer
+                    {
+                        SessionId = sessionId,
+                        QuestionId = submittedAnswer.QuestionId,
+                        ChosenOptionId = submittedAnswer.ChosenOptionId,
+                        AnswerText = submittedAnswer.AnswerText,
+                    };
+                    _context.UserAnswers.Add(newAnswer);
+                    session.UserAnswers.Add(newAnswer);
+                }
+            }
+            await _context.SaveChangesAsync();
+
+            // BƯỚC 2: CHẤM ĐIỂM TỰ ĐỘNG VÀ TÍNH TỔNG ĐIỂM TẠM THỜI
             int totalQuestions = session.Test.Questions.Count;
-            int correctAnswersCount = 0;
+            decimal partialScore = 0;
             bool hasEssayQuestions = false;
+            decimal pointsPerQuestion = (totalQuestions > 0) ? 10.0m / totalQuestions : 0;
 
             foreach (var question in session.Test.Questions)
             {
                 var userAnswer = session.UserAnswers.FirstOrDefault(ua => ua.QuestionId == question.QuestionId);
                 if (userAnswer == null) continue;
 
-                if (question.QuestionType == "MCQ" || question.QuestionType == "TRUE_FALSE")
-                {
-                    var correctOption = question.AnswerOptions.FirstOrDefault(o => o.IsCorrect == true);
-                    if (correctOption != null && userAnswer.ChosenOptionId == correctOption.OptionId)
-                    {
-                        correctAnswersCount++;
-                    }
-                }
-                else if (question.QuestionType == "ESSAY" && !string.IsNullOrWhiteSpace(userAnswer.AnswerText))
+                if (question.QuestionType == "ESSAY")
                 {
                     hasEssayQuestions = true;
+                    userAnswer.Score = null; // Tự luận cần chờ chấm
+                }
+                else // Chấm tự động các câu trắc nghiệm
+                {
+                    var correctOption = question.AnswerOptions.FirstOrDefault(o => o.IsCorrect);
+                    if (correctOption != null && userAnswer.ChosenOptionId == correctOption.OptionId)
+                    {
+                        userAnswer.Score = pointsPerQuestion;
+                    }
+                    else
+                    {
+                        userAnswer.Score = 0;
+                    }
+                    // Cộng điểm vừa chấm vào điểm tạm thời
+                    partialScore += userAnswer.Score.Value;
                 }
             }
 
-            decimal finalScore = (totalQuestions > 0)
-                ? ((decimal)correctAnswersCount / totalQuestions) * 10
-                : 0;
-
-            session.FinalScore = Math.Round(finalScore, 2);
+            // BƯỚC 3: CẬP NHẬT PHIÊN LÀM BÀI
             session.EndTime = DateTime.Now;
-            session.Status = "COMPLETED";
 
-            if (!hasEssayQuestions)
+            // SỬA LỖI: Luôn lưu điểm tạm thời của các câu trắc nghiệm
+            session.FinalScore = Math.Round(partialScore, 2);
+
+            // Trạng thái và kết quả cuối cùng (IsPassed) phụ thuộc vào việc có câu tự luận không
+            if (hasEssayQuestions)
             {
-                session.IsPassed = session.FinalScore >= session.Test.PassingScore;
+                session.Status = "COMPLETED"; // Trạng thái: Đã nộp, chờ chấm
+                session.IsPassed = null;      // Kết quả cuối cùng: Chưa xác định
             }
             else
             {
-                session.IsPassed = null;
+                session.Status = "GRADED";    // Trạng thái: Đã chấm xong (vì không có tự luận)
+                session.IsPassed = session.FinalScore >= (session.Test?.PassingScore ?? 0);
             }
 
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Bạn đã nộp bài thành công!";
-            return RedirectToAction("MyTests", "EmployeeDashboard");
+            return RedirectToAction("ViewResult", "EmployeeDashboard", new { sessionId = session.SessionId });
         }
     }
 }
-

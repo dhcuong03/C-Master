@@ -1,42 +1,126 @@
-﻿@{
+﻿@model TestMaster.ViewModels.IndividualReportViewModel
+@{
     ViewData["Title"] = "Thống kê Năng lực Cá nhân";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml"; // Giả sử bạn có layout này
 }
 
 <div class="container-fluid">
     <h1 class="h3 mb-4 text-gray-800">@ViewData["Title"]</h1>
 
-    <!-- Vùng tìm kiếm nhân viên -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Tìm kiếm Nhân viên</h6>
         </div>
         <div class="card-body">
-            <form>
-                <div class="form-group">
-                    <label>Chọn một nhân viên để xem báo cáo chi tiết:</label>
-                    <select class="form-control">
-                        <option>-- Vui lòng chọn --</option>
-                        <!-- Danh sách nhân viên sẽ được tải vào đây -->
-                    </select>
+            <form asp-action="IndividualReport" method="get">
+                <div class="row align-items-end">
+                    <div class="col-md-10">
+                        <label for="userId" class="form-label">Chọn một nhân viên để xem báo cáo chi tiết:</label>
+                        <select id="userId" name="userId" class="form-control" asp-items="Model.UserList">
+                            <option value="">-- Vui lòng chọn --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-chart-line fa-sm"></i> Xem Báo cáo
+                        </button>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Xem Báo cáo</button>
             </form>
         </div>
     </div>
 
-    <!-- Vùng hiển thị kết quả -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Kết quả Năng lực</h6>
+    @if (Model.SelectedUser != null)
+    {
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Hồ sơ Năng lực của: @Model.SelectedUser.FullName</h6>
+            </div>
+            <div class="card-body">
+                @if (Model.HasData)
+                {
+                    <div class="chart-container" style="position: relative; height:450px; width:100%">
+                        <canvas id="skillRadarChart"></canvas>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">Nhân viên này chưa có dữ liệu đánh giá để tạo báo cáo.</div>
+                }
+            </div>
         </div>
-        <div class="card-body">
-            <p>Vui lòng chọn một nhân viên để xem thống kê chi tiết theo từng kỹ năng.</p>
-            <!-- Biểu đồ radar hoặc bảng kỹ năng sẽ được hiển thị ở đây -->
-        </div>
-    </div>
-
-    <a asp-action="Index" class="btn btn-secondary">
-        <i class="fas fa-arrow-left"></i> Quay lại trang Báo cáo
-    </a>
+    }
 </div>
+
+@section Scripts {
+    @if (Model.SelectedUser != null && Model.HasData)
+    {
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Lấy dữ liệu từ Model và chuyển sang định dạng JSON cho JavaScript
+                const skillLabels = @Html.Raw(Json.Serialize(Model.SkillNames));
+                const individualData = @Html.Raw(Json.Serialize(Model.IndividualScores));
+                const companyData = @Html.Raw(Json.Serialize(Model.CompanyAverageScores));
+
+                const ctx = document.getElementById('skillRadarChart').getContext('2d');
+
+                new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: skillLabels,
+                        datasets: [
+                            {
+                                label: 'Năng lực cá nhân',
+                                data: individualData,
+                                fill: true,
+                                backgroundColor: 'rgba(78, 115, 223, 0.2)', // Blue
+                                borderColor: 'rgba(78, 115, 223, 1)',
+                                pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+                                pointBorderColor: '#fff',
+                                pointHoverBackgroundColor: '#fff',
+                                pointHoverBorderColor: 'rgba(78, 115, 223, 1)'
+                            },
+                            {
+                                label: 'Trung bình công ty',
+                                data: companyData,
+                                fill: true,
+                                backgroundColor: 'rgba(28, 200, 138, 0.2)', // Green
+                                borderColor: 'rgba(28, 200, 138, 1)',
+                                pointBackgroundColor: 'rgba(28, 200, 138, 1)',
+                                pointBorderColor: '#fff',
+                                pointHoverBackgroundColor: '#fff',
+                                pointHoverBorderColor: 'rgba(28, 200, 138, 1)'
+                            }
+                        ]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        elements: {
+                            line: {
+                                borderWidth: 3
+                            }
+                        },
+                        scales: {
+                            r: {
+                                angleLines: { display: true },
+                                // 2. SỬA LỖI: Chỉnh thang điểm từ 0-100 để khớp với dữ liệu điểm
+                                suggestedMin: 0,
+                                suggestedMax: 100,
+                                ticks: {
+                                    backdropColor: 'rgba(0, 0, 0, 0)',
+                                    color: '#858796'
+                                },
+                                pointLabels: {
+                                    font: { size: 14 },
+                                    color: '#222'
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        </script>
+    }
+}

@@ -3,9 +3,13 @@
 @{
     Layout = "~/Views/Shared/_EmployeeLayout.cshtml";
     ViewData["Title"] = Model.Test.Title;
+
+    // SỬA LỖI: Sắp xếp câu hỏi và tạo một Dictionary tra cứu câu trả lời một lần duy nhất.
+    // Điều này đảm bảo thứ tự câu hỏi luôn nhất quán và cải thiện hiệu năng.
+    var questions = Model.Test.Questions.OrderBy(q => q.QuestionId).ToList();
+    var userAnswersMap = Model.UserAnswers.ToDictionary(a => a.QuestionId);
 }
 
-<!-- === CSS TÙY CHỈNH CHO GIAO DIỆN MỚI === -->
 <style>
     .test-wrapper {
         display: flex;
@@ -101,9 +105,8 @@
         scroll-margin-top: 20px;
     }
 
-        /* Thêm hiệu ứng cho câu hỏi đang được xem hoặc bị lỗi */
-        .question-card.current, .question-card.unanswered-error {
-            border: 2px solid #e74a3b; /* Đổi thành màu đỏ để cảnh báo */
+        .question-card.unanswered-error {
+            border: 2px solid #e74a3b;
             box-shadow: 0 .5rem 1rem rgba(231, 74, 59, .25) !important;
         }
 
@@ -121,12 +124,10 @@
         <input type="hidden" asp-for="SessionId" />
 
         <div class="test-wrapper">
-            <!-- === THANH ĐIỀU HƯỚNG BÊN PHẢI (STICKY) === -->
             <div class="test-sidebar">
                 <div class="sidebar-inner">
                     <div class="card shadow">
                         <div class="card-body text-center">
-                            <!-- === ĐỒNG HỒ TRÒN MỚI === -->
                             <div class="timer-container mb-3">
                                 <canvas id="timer-chart"></canvas>
                                 <div id="timer-text" class="timer-text text-gray-800"></div>
@@ -140,7 +141,7 @@
                         </div>
                         <div class="card-body">
                             <div class="question-palette">
-                                @for (int i = 0; i < Model.Test.Questions.Count; i++)
+                                @for (int i = 0; i < questions.Count; i++)
                                 {
                                     <a class="palette-item" href="#question-card-@i" id="palette-item-@i">
                                         @(i + 1)
@@ -156,21 +157,20 @@
                 </div>
             </div>
 
-            <!-- === CỘT NỘI DUNG CHÍNH (CÁC CÂU HỎI) === -->
             <div class="test-main-content">
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">@Model.Test.Title</h1>
                 </div>
 
-                @for (int i = 0; i < Model.Test.Questions.Count; i++)
+                @for (int i = 0; i < questions.Count; i++)
                 {
-                    var question = Model.Test.Questions.ToList()[i];
-                    var savedAnswer = Model.UserAnswers.FirstOrDefault(ua => ua.QuestionId == question.QuestionId);
+                    var question = questions[i];
+                    userAnswersMap.TryGetValue(question.QuestionId, out var savedAnswer);
 
                     <div class="card shadow-sm mb-3 question-card" id="question-card-@i">
                         <div class="card-header d-flex justify-content-between align-items-center bg-light">
                             <h6 class="m-0 font-weight-bold text-primary">
-                                Câu @(i + 1): @question.Content
+                                Câu @(i + 1): @Html.Raw(question.Content)
                             </h6>
                             <div class="form-check">
                                 <input class="form-check-input mark-review-cb" type="checkbox" id="mark-@i" data-question-index="@i">
@@ -185,7 +185,7 @@
                             @if (question.QuestionType == "MCQ" || question.QuestionType == "TRUE_FALSE")
                             {
                                 <ul class="list-group list-group-flush">
-                                    @foreach (var option in question.AnswerOptions)
+                                    @foreach (var option in question.AnswerOptions.OrderBy(o => o.OptionId))
                                     {
                                         <li class="list-group-item">
                                             <div class="form-check">
@@ -215,27 +215,24 @@
 </div>
 
 @section Scripts {
-    <!-- Thư viện Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        const questionCount = @questions.Count;
+
         // === HÀM KIỂM TRA TRƯỚC KHI NỘP BÀI ===
         function validateAndSubmit() {
             let firstUnansweredIndex = -1;
-
-            // Xóa bỏ viền đỏ cảnh báo cũ
             $('.question-card').removeClass('unanswered-error');
 
-            for (let i = 0; i < @Model.Test.Questions.Count; i++) {
+            for (let i = 0; i < questionCount; i++) {
                 let questionCard = $('#question-card-' + i);
                 let isAnswered = false;
 
-                // Kiểm tra câu trắc nghiệm
                 if (questionCard.find('input[type="radio"]').length > 0) {
                     if ($('input[name="UserAnswers[' + i + '].ChosenOptionId"]:checked').length > 0) {
                         isAnswered = true;
                     }
                 }
-                // Kiểm tra câu tự luận
                 else if (questionCard.find('textarea').length > 0) {
                     if ($('textarea[name="UserAnswers[' + i + '].AnswerText"]').val().trim() !== '') {
                         isAnswered = true;
@@ -244,32 +241,26 @@
 
                 if (!isAnswered) {
                     firstUnansweredIndex = i;
-                    break; // Dừng lại ở câu đầu tiên chưa trả lời
+                    break;
                 }
             }
 
             if (firstUnansweredIndex !== -1) {
-                // Nếu có câu chưa trả lời
                 alert('Vui lòng hoàn thành câu hỏi số ' + (firstUnansweredIndex + 1) + ' trước khi nộp bài.');
-
-                // Cuộn đến câu hỏi bị bỏ sót
                 const targetElement = document.getElementById('question-card-' + firstUnansweredIndex);
                 if (targetElement) {
                     targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    // Thêm viền đỏ để thu hút sự chú ý
                     $(targetElement).addClass('unanswered-error');
                 }
-
-                return false; // Ngăn không cho form được nộp
+                return false;
             }
 
-            // Nếu tất cả các câu đã được trả lời, hiển thị hộp thoại xác nhận
             return confirm('Tất cả các câu hỏi đã được trả lời. Bạn có chắc chắn muốn nộp bài không?');
         }
 
 
         $(document).ready(function () {
-            // === LOGIC ĐỒNG HỒ ĐẾM NGƯỢC (ĐÃ NÂNG CẤP) ===
+            // === LOGIC ĐỒNG HỒ ĐẾM NGƯỢC ===
             const totalDuration = @Model.Test.DurationMinutes * 60;
             let timeRemaining = @Model.TimeRemainingInSeconds;
             const timerTextElement = document.getElementById('timer-text');
@@ -297,7 +288,7 @@
                 if (timeRemaining <= 0) {
                     timerTextElement.textContent = "Hết giờ!";
                     if(testForm) {
-                        testForm.removeAttribute('onsubmit'); // Bỏ qua kiểm tra khi hết giờ
+                        testForm.removeAttribute('onsubmit');
                         testForm.submit();
                     }
                     clearInterval(timerInterval);
@@ -314,7 +305,6 @@
 
                 timeRemaining--;
             }
-
             const timerInterval = setInterval(updateTimer, 1000);
             updateTimer();
 
@@ -322,29 +312,27 @@
             $('.palette-item').on('click', function(e) {
                 e.preventDefault();
                 var targetId = $(this).attr('href');
-                $('html, body').animate({
-                    scrollTop: $(targetId).offset().top - 20
-                }, 500);
+                var targetElement = $(targetId);
+                if (targetElement.length) {
+                    $('html, body').animate({
+                        scrollTop: targetElement.offset().top - 20
+                    }, 500);
+                }
             });
 
             function updatePaletteState() {
-                $('.answer-input').each(function() {
-                    var questionIndex = $(this).data('question-index');
-                    var paletteItem = $('#palette-item-' + questionIndex);
+                for (let i = 0; i < questionCount; i++) {
+                    let isAnswered = false;
+                    const radioChecked = $(`input[name="UserAnswers[${i}].ChosenOptionId"]:checked`);
+                    const textarea = $(`textarea[name="UserAnswers[${i}].AnswerText"]`);
 
-                    var isAnswered = false;
-                    if ($(this).is(':radio')) {
-                        if ($(`input[name="UserAnswers[${questionIndex}].ChosenOptionId"]:checked`).length > 0) {
-                            isAnswered = true;
-                        }
-                    } else if ($(this).is('textarea')) {
-                        if ($(this).val().trim() !== '') {
-                            isAnswered = true;
-                        }
+                    if (radioChecked.length > 0) {
+                        isAnswered = true;
+                    } else if (textarea.length > 0 && textarea.val().trim() !== '') {
+                        isAnswered = true;
                     }
-
-                    paletteItem.toggleClass('answered', isAnswered);
-                });
+                    $(`#palette-item-${i}`).toggleClass('answered', isAnswered);
+                }
             }
 
             $('.mark-review-cb').on('change', function() {
@@ -358,10 +346,8 @@
 
             $('.answer-input').on('change input', function() {
                 updatePaletteState();
-
                 clearTimeout(autoSaveTimeout);
                 statusDiv.text('Đang nhập...').css('opacity', 1);
-
                 var input = $(this);
 
                 autoSaveTimeout = setTimeout(function() {
@@ -382,10 +368,15 @@
                         answerData.AnswerText = input.val();
                     }
 
+                    var antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
+
                     $.ajax({
                         url: '@Url.Action("SaveAnswer", "TestSession")',
                         type: 'POST',
                         contentType: 'application/json',
+                        headers: {
+                            'RequestVerificationToken': antiForgeryToken
+                        },
                         data: JSON.stringify(answerData),
                         success: function(response) {
                             if(response.success) {
@@ -406,4 +397,3 @@
         });
     </script>
 }
-

@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,10 +16,13 @@ namespace TestMaster.Controllers
     public class AdminReportsController : Controller
     {
         private readonly EmployeeAssessmentContext _context;
+        private readonly IMemoryCache _cache;
+        private const string CompanyScoresCacheKey = "CompanyAverageScores";
 
-        public AdminReportsController(EmployeeAssessmentContext context)
+        public AdminReportsController(EmployeeAssessmentContext context, IMemoryCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         // GET: /AdminReports/Index
@@ -30,9 +36,10 @@ namespace TestMaster.Controllers
 
         #region Report Actions
 
-        // GET: /AdminReports/ReportByRole
+        // GET: /AdminReports/ReportByRole (Không thay đổi)
         public async Task<IActionResult> ReportByRole()
         {
+            // ... (Phần này giữ nguyên)
             var reportData = await _context.Users
                 .Include(u => u.Role)
                 .Where(u => u.Role != null && u.Role.RoleName != "Admin")
@@ -48,30 +55,26 @@ namespace TestMaster.Controllers
             return View(reportData);
         }
 
-        // GET: /AdminReports/ReportByLevel
-        // === LOGIC TÍNH TOÁN ĐẦY ĐỦ ĐÃ ĐƯỢC THÊM VÀO ĐÂY ===
+        // GET: /AdminReports/ReportByLevel (Không thay đổi)
         public async Task<IActionResult> ReportByLevel()
         {
+            // ... (Phần này giữ nguyên)
             var reportData = await _context.Levels
-                .Include(l => l.Users)
-                    .ThenInclude(u => u.Role)
-                .Include(l => l.Users)
-                    .ThenInclude(u => u.UserTestSessions)
-                .Where(l => l.Users.Any(u => u.Role.RoleName != "Admin"))
-                .Select(l => new ReportByLevelViewModel
-                {
-                    LevelName = l.LevelName,
-                    UserCount = l.Users.Count(u => u.Role.RoleName != "Admin"),
-
-                    // Tính điểm kỹ năng trung bình từ FinalScore
-                    AverageSkillScore = l.Users
-                                         .Where(u => u.Role.RoleName != "Admin" && u.UserTestSessions.Any(s => s.FinalScore.HasValue))
-                                         .SelectMany(u => u.UserTestSessions)
-                                         .DefaultIfEmpty()
-                                         .Average(ts => ts == null ? 0 : (double)(ts.FinalScore ?? 0)),
-
-                    // Lấy thông tin phân bổ vai trò
-                    RoleDistribution = l.Users
+               .Include(l => l.Users)
+                   .ThenInclude(u => u.Role)
+               .Include(l => l.Users)
+                   .ThenInclude(u => u.UserTestSessions)
+               .Where(l => l.Users.Any(u => u.Role.RoleName != "Admin"))
+               .Select(l => new ReportByLevelViewModel
+               {
+                   LevelName = l.LevelName,
+                   UserCount = l.Users.Count(u => u.Role.RoleName != "Admin"),
+                   AverageSkillScore = l.Users
+                                        .Where(u => u.Role.RoleName != "Admin" && u.UserTestSessions.Any(s => s.FinalScore.HasValue))
+                                        .SelectMany(u => u.UserTestSessions)
+                                        .DefaultIfEmpty()
+                                        .Average(ts => ts == null ? 0 : (double)(ts.FinalScore ?? 0)),
+                   RoleDistribution = l.Users
                                         .Where(u => u.Role != null && u.Role.RoleName != "Admin")
                                         .GroupBy(u => u.Role.RoleName)
                                         .Select(g => new RoleDistributionViewModel
@@ -81,61 +84,90 @@ namespace TestMaster.Controllers
                                         })
                                         .OrderByDescending(rd => rd.UserCount)
                                         .ToList()
-                })
-                .ToListAsync();
+               })
+               .ToListAsync();
 
-            // Sắp xếp kết quả theo thứ tự logic (Junior -> Middle -> Senior)
-            var levelOrder = new Dictionary<string, int> { { "Junior", 1 }, { "Middle", 2 }, { "Senior", 3 }, { "Expert", 4 } };
+            var levelOrder = new Dictionary<string, int> { { "Junior", 1 }, { "Middle", 2 }, { "Senior", 3 } };
             var sortedReportData = reportData
-                                    .OrderBy(r => levelOrder.ContainsKey(r.LevelName) ? levelOrder[r.LevelName] : 99)
-                                    .ToList();
+                                     .OrderBy(r => levelOrder.ContainsKey(r.LevelName) ? levelOrder[r.LevelName] : 99)
+                                     .ToList();
 
             return View(sortedReportData);
         }
 
         // GET: /AdminReports/IndividualReport
-        [HttpGet]
-        public async Task<IActionResult> IndividualReport()
+        public async Task<IActionResult> IndividualReport(int? userId)
         {
             var viewModel = new IndividualReportViewModel
             {
-                AllUsers = await _context.Users
-                    .Where(u => u.Role.RoleName != "Admin")
+                UserList = new SelectList(await _context.Users
+                    .Include(u => u.Role)
+                    .Where(u => u.Role != null && u.Role.RoleName == "Employee")
                     .OrderBy(u => u.FullName)
-                    .ToListAsync()
-            };
-            return View(viewModel);
-        }
-
-        // POST: /AdminReports/IndividualReport
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> IndividualReport(int selectedUserId)
-        {
-            var allUsers = await _context.Users
-                                .Where(u => u.Role.RoleName != "Admin")
-                                .OrderBy(u => u.FullName)
-                                .ToListAsync();
-
-            var selectedUser = allUsers.FirstOrDefault(u => u.UserId == selectedUserId);
-
-            var viewModel = new IndividualReportViewModel
-            {
-                AllUsers = allUsers,
-                SelectedUser = selectedUser
+                    .ToListAsync(), "UserId", "FullName", userId),
+                SelectedUserId = userId
             };
 
-            if (selectedUser != null)
+            if (userId.HasValue)
             {
-                // Dữ liệu giả lập cho báo cáo cá nhân
-                viewModel.SkillScores = new System.Collections.Generic.List<SkillScoreViewModel>
+                viewModel.SelectedUser = await _context.Users.FindAsync(userId.Value);
+                if (viewModel.SelectedUser == null)
                 {
-                    new SkillScoreViewModel { SkillName = "Lập trình C#", AverageScore = 8.5 },
-                    new SkillScoreViewModel { SkillName = "ASP.NET Core", AverageScore = 9.1 },
-                    new SkillScoreViewModel { SkillName = "SQL & Databases", AverageScore = 7.6 }
-                };
-            }
+                    return NotFound();
+                }
 
+                var userAnswers = await _context.UserAnswers
+                    .Where(ua => ua.Session.UserId == userId.Value && ua.Score.HasValue && ua.Question.SkillId.HasValue)
+                    .Include(ua => ua.Question)
+                        .ThenInclude(q => q.Skill)
+                    .ToListAsync();
+
+                // 2. Tính điểm trung bình của nhân viên cho từng kỹ năng
+                var individualSkillScores = userAnswers
+                    .Where(ua => ua.Question.Skill != null)
+                    .GroupBy(ua => ua.Question.Skill)
+                    .Select(g => new {
+                        SkillId = g.Key.SkillId,
+                        // SỬA ĐỔI: Nhân với 100 để quy đổi về thang điểm 100
+                        AverageScore = g.Average(ua => ua.Score.Value) * 100m
+                    })
+                    .ToDictionary(x => x.SkillId, x => x.AverageScore);
+
+                if (!_cache.TryGetValue(CompanyScoresCacheKey, out Dictionary<int, decimal> companyAverageScores))
+                {
+                    // 4. Nếu Cache không có, truy vấn CSDL để tính toán
+                    companyAverageScores = await _context.UserAnswers
+                        .Where(ua => ua.Score.HasValue && ua.Question.SkillId.HasValue && ua.Question.Skill != null)
+                        .GroupBy(ua => new { ua.Question.Skill.SkillId, ua.Question.Skill.SkillName })
+                        .Select(g => new {
+                            g.Key.SkillId,
+                            // SỬA ĐỔI: Nhân với 100 để quy đổi về thang điểm 100
+                            AverageScore = g.Average(ua => ua.Score.Value) * 100m
+                        })
+                        .ToDictionaryAsync(x => x.SkillId, x => x.AverageScore);
+
+                    var cacheEntryOptions = new MemoryCacheEntryOptions()
+                        .SetAbsoluteExpiration(TimeSpan.FromHours(4));
+
+                    _cache.Set(CompanyScoresCacheKey, companyAverageScores, cacheEntryOptions);
+                }
+
+                var allSkillsInvolved = await _context.Skills
+                    .Where(s => companyAverageScores.Keys.Contains(s.SkillId))
+                    .OrderBy(s => s.SkillName)
+                    .ToListAsync();
+
+                foreach (var skill in allSkillsInvolved)
+                {
+                    viewModel.SkillNames.Add(skill.SkillName);
+
+                    decimal individualScore = individualSkillScores.TryGetValue(skill.SkillId, out var iScore) ? iScore : 0;
+                    viewModel.IndividualScores.Add(Math.Round(individualScore, 2));
+
+                    decimal companyScore = companyAverageScores.TryGetValue(skill.SkillId, out var cScore) ? cScore : 0;
+                    viewModel.CompanyAverageScores.Add(Math.Round(companyScore, 2));
+                }
+            }
             return View(viewModel);
         }
 
