@@ -18,6 +18,15 @@
                         </div>
                     }
 
+                    @* ===== ĐÃ THÊM ĐOẠN NÀY VÀO ĐÚNG CHỖ ===== *@
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success" role="alert">
+                            @TempData["SuccessMessage"]
+                        </div>
+                    }
+                    @* ========================================== *@
+
                     <div class="form-floating mb-3">
                         <input type="text" id="username" name="username" class="form-control" placeholder="Tên đăng nhập" required />
                         <label for="username">Tên đăng nhập</label>
@@ -33,7 +42,7 @@
                     </div>
 
                     <div class="text-center">
-                        <a asp-action="ForgotPassword" asp-controller="Account">Quên mật khẩu?</a>
+                        <a class="small" asp-action="ForgotPassword">Quên mật khẩu?</a>
                     </div>
                 </form>
             </div>

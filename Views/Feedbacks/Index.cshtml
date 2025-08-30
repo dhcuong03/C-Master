@@ -1,53 +1,84 @@
 ﻿@model IEnumerable<TestMaster.Models.Feedback>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Quản lý Góp ý";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Index</h1>
+<h4>@ViewData["Title"]</h4>
+<p>Danh sách các góp ý từ nhân viên về các bài test.</p>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Test)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Test.TestId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.UserId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.FeedbackId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.FeedbackId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.FeedbackId">Delete</a>
-            </td>
-        </tr>
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Người gửi</th>
+                        <th>Bài test</th>
+                        <th>Nội dung</th>
+                        <th>Ngày gửi</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@(item.User?.FullName ?? "N/A")</td>
+                            <td>@(item.Test?.Title ?? "N/A")</td>
+                            <td>@item.Content</td>
+                            <td>@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>
+                                <!-- Dropdown để thay đổi trạng thái -->
+                                <select class="form-select form-select-sm status-dropdown" data-id="@item.FeedbackId">
+                                    <option value="New" selected="@(item.Status == "New")">Mới</option>
+                                    <option value="Seen" selected="@(item.Status == "Seen")">Đã xem</option>
+                                    <option value="Resolved" selected="@(item.Status == "Resolved")">Đã xử lý</option>
+                                </select>
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-controller="Feedbacks" asp-route-id="@item.FeedbackId" class="btn btn-info btn-sm">Xem</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Bắt sự kiện khi admin thay đổi giá trị trong dropdown trạng thái
+            $('.status-dropdown').on('change', function() {
+                var feedbackId = $(this).data('id');
+                var newStatus = $(this).val();
+                var selectElement = $(this);
+
+                $.ajax({
+                    url: '@Url.Action("UpdateStatus", "Feedbacks")',
+                    type: 'POST',
+                    // Gửi ID và trạng thái mới lên controller
+                    data: { id: feedbackId, newStatus: newStatus },
+                    success: function(response) {
+                        if (response.success) {
+                            // Hiệu ứng nhỏ để báo hiệu đã lưu thành công
+                            selectElement.closest('td').css('background-color', '#d4edda').delay(1000).queue(function(next){
+                                $(this).css('background-color', '');
+                                next();
+                            });
+                        } else {
+                            alert('Lỗi: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Đã có lỗi xảy ra khi kết nối tới server.');
+                    }
+                });
+            });
+        });
+    </script>
 }
-    </tbody>
-</table>

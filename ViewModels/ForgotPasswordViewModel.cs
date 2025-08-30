@@ -7,6 +7,6 @@ namespace TestMaster.ViewModels
         [Required(ErrorMessage = "Vui lòng nhập địa chỉ email.")]
         [EmailAddress(ErrorMessage = "Địa chỉ email không hợp lệ.")]
         [Display(Name = "Địa chỉ Email")]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty; // <-- THÊM = string.Empty;
     }
 }

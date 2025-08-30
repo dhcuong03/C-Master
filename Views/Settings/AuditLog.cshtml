@@ -1,0 +1,171 @@
+﻿@model IEnumerable<TestMaster.Models.AuditLog>
+
+@{
+    ViewData["Title"] = "Lịch sử hoạt động";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@* Thêm CSS tùy chỉnh để làm đẹp giao diện *@
+<style>
+    /* Sử dụng font chữ hiện đại hơn */
+    body {
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* Thêm hiệu ứng đổ bóng và bo tròn cho card */
+    .card {
+        border: none;
+        border-radius: 0.75rem;
+        transition: box-shadow 0.3s ease-in-out;
+    }
+
+        .card:hover {
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.1) !important;
+        }
+
+    /* Cải thiện giao diện bảng */
+    .table thead th {
+        background-color: #f8f9fc;
+        border-bottom: 2px solid #e3e6f0;
+        font-weight: 600;
+        color: #5a5c69;
+    }
+
+    .table tbody tr {
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    /* Thêm hiệu ứng hover cho các hàng trong bảng */
+    .table-hover tbody tr:hover {
+        background-color: #f1f3f5;
+        cursor: pointer;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+        padding: 0.9rem;
+    }
+
+    /* Nút bấm trông hiện đại hơn */
+    .btn {
+        border-radius: 0.5rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn-outline-danger {
+        border-color: #e74a3b;
+        color: #e74a3b;
+    }
+
+        .btn-outline-danger:hover {
+            background-color: #e74a3b;
+            color: white;
+        }
+
+    .btn-danger.btn-circle {
+        transition: transform 0.2s ease;
+    }
+
+        .btn-danger.btn-circle:hover {
+            transform: scale(1.1);
+        }
+
+    /* Cải thiện giao diện Modal */
+    .modal-content {
+        border-radius: 0.75rem;
+        border: none;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .modal-footer {
+        border-top: 1px solid #e9ecef;
+    }
+
+</style>
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-2">
+        <div>
+            <h1 class="h3 mb-2 text-gray-800">@ViewData["Title"]</h1>
+            <p class="mb-4 text-muted">Hiển thị 200 hành động gần nhất được ghi lại trong hệ thống.</p>
+        </div>
+        <div>
+            <button type="button" class="btn btn-outline-danger shadow-sm" data-toggle="modal" data-target="#clearLogModal">
+                <i class="fas fa-eraser fa-sm"></i> Xóa Toàn bộ Lịch sử
+            </button>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success border-left-success" role="alert">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger border-left-danger" role="alert">@TempData["ErrorMessage"]</div>
+    }
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Thời gian</th>
+                            <th>Người dùng</th>
+                            <th>Hành động</th>
+                            <th>Chi tiết</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var log in Model)
+                        {
+                            <tr>
+                                <td>@log.LogTime?.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                <td>@(log.User?.FullName ?? "N/A")</td>
+                                <td><span class="badge badge-pill badge-light">@log.Action</span></td>
+                                <td>@log.Details</td>
+                                <td class="text-center">
+                                    <form asp-action="DeleteAuditLog" asp-route-id="@log.LogId" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn xóa mục lịch sử này không?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-danger btn-circle btn-sm" title="Xóa mục này">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal xác nhận xóa toàn bộ -->
+<div class="modal fade" id="clearLogModal" tabindex="-1" role="dialog" aria-labelledby="clearLogModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="clearLogModalLabel">Xác nhận xóa toàn bộ lịch sử?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                Hành động này sẽ xóa <strong>TOÀN BỘ</strong> lịch sử hoạt động và không thể hoàn tác. Bạn có chắc chắn muốn tiếp tục?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                <form asp-action="ClearAuditLog" asp-controller="Settings" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Xác nhận Xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

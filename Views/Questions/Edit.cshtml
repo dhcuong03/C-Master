@@ -1,64 +1,131 @@
 ﻿@model TestMaster.Models.Question
 
 @{
-    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Chỉnh sửa câu hỏi";
+    // --- LOGIC CHỌN LAYOUT ---
+    // Tự động chọn layout phù hợp với vai trò của người dùng
+    if (User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_HRLayout.cshtml";
+    }
 }
 
-<h1>Edit</h1>
+<div class="container-fluid">
+    <h4>@ViewData["Title"]</h4>
+    <hr />
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="QuestionId" />
 
-<h4>Question</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="QuestionId" />
-            <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
-                <span asp-validation-for="Content" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="QuestionType" class="control-label"></label>
-                <input asp-for="QuestionType" class="form-control" />
-                <span asp-validation-for="QuestionType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SkillId" class="control-label"></label>
-                <select asp-for="SkillId" class="form-control" asp-items="ViewBag.SkillId"></select>
-                <span asp-validation-for="SkillId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Difficulty" class="control-label"></label>
-                <input asp-for="Difficulty" class="form-control" />
-                <span asp-validation-for="Difficulty" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedBy" class="control-label"></label>
-                <select asp-for="CreatedBy" class="form-control" asp-items="ViewBag.CreatedBy"></select>
-                <span asp-validation-for="CreatedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UpdatedAt" class="control-label"></label>
-                <input asp-for="UpdatedAt" class="form-control" />
-                <span asp-validation-for="UpdatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="Content" class="form-label fw-bold">Nội dung câu hỏi</label>
+                        <textarea asp-for="Content" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Content" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="QuestionType" class="form-label">Loại câu hỏi</label>
+                        <select asp-for="QuestionType" class="form-select" asp-items="ViewBag.QuestionTypeList"></select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="SkillId" class="form-label">Kỹ năng</label>
+                        <select asp-for="SkillId" class="form-select" asp-items="ViewBag.SkillId">
+                            <option value="">-- Chọn kỹ năng --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Difficulty" class="form-label">Độ khó</label>
+                        <select asp-for="Difficulty" class="form-select" asp-items="ViewBag.DifficultyList"></select>
+                    </div>
+                </div>
+
+                <hr />
+
+                <h5>Các lựa chọn trả lời</h5>
+                <div id="answerOptionsContainer">
+
+                    @* ===== SỬA LỖI: Đổi tên biến để binding đúng ===== *@
+                    @{
+                        var AnswerOptions = Model.AnswerOptions.ToList();
+                    }
+                    @for (int i = 0; i < AnswerOptions.Count; i++)
+                    {
+                        <div class="input-group mb-2 answer-option-row">
+                            <div class="input-group-text">
+                                <input asp-for="@AnswerOptions[i].IsCorrect" class="form-check-input mt-0" type="checkbox" title="Đánh dấu nếu đây là đáp án đúng" />
+                                <input type="hidden" asp-for="@AnswerOptions[i].OptionId" />
+                                <input type="hidden" asp-for="@AnswerOptions[i].QuestionId" />
+                            </div>
+                            <input asp-for="@AnswerOptions[i].OptionText" class="form-control" placeholder="Nội dung lựa chọn thứ @(i + 1)" />
+                            <button type="button" class="btn btn-outline-danger remove-option-btn">Xóa</button>
+                        </div>
+                    }
+                    @* ================================================= *@
+
+                </div>
+                <button type="button" id="addOptionBtn" class="btn btn-success btn-sm mt-2">Thêm lựa chọn</button>
+
+                <hr />
+
+                <div class="form-group mt-4">
+                    <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            function reindexOptions() {
+                $("#answerOptionsContainer .answer-option-row").each(function(index) {
+                    $(this).find("input").each(function() {
+                        var oldName = $(this).attr("name");
+                        if (oldName) {
+                           var newName = oldName.replace(/\[\d+\]/, `[${index}]`);
+                           $(this).attr("name", newName);
+                        }
+                        if ($(this).hasClass("form-control")) {
+                            $(this).attr("placeholder", `Nội dung lựa chọn thứ ${index + 1}`);
+                        }
+                    });
+                });
+            }
+
+            $("#addOptionBtn").click(function () {
+                let optionIndex = $("#answerOptionsContainer .answer-option-row").length;
+                var newOptionRow = `
+                    <div class="input-group mb-2 answer-option-row">
+                        <div class="input-group-text">
+                            <input name="AnswerOptions[${optionIndex}].IsCorrect" class="form-check-input mt-0" type="checkbox" value="true" title="Đánh dấu nếu đây là đáp án đúng"/>
+                            <input type="hidden" name="AnswerOptions[${optionIndex}].IsCorrect" value="false" />
+                        </div>
+                        <input name="AnswerOptions[${optionIndex}].OptionText" class="form-control" placeholder="Nội dung lựa chọn thứ ${optionIndex + 1}" />
+                        <input type="hidden" name="AnswerOptions[${optionIndex}].OptionId" value="0" />
+                        <input type="hidden" name="AnswerOptions[${optionIndex}].QuestionId" value="@Model.QuestionId" />
+                        <button type="button" class="btn btn-outline-danger remove-option-btn">Xóa</button>
+                    </div>`;
+                $("#answerOptionsContainer").append(newOptionRow);
+            });
+
+            $("#answerOptionsContainer").on("click", ".remove-option-btn", function () {
+                $(this).closest(".answer-option-row").remove();
+                reindexOptions();
+            });
+        });
+    </script>
 }

@@ -1,0 +1,218 @@
+﻿@model IEnumerable<TestMaster.ViewModels.ReportByLevelViewModel>
+
+@{
+    ViewData["Title"] = "Báo cáo theo Cấp độ";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var totalUsers = Model.Sum(item => item.UserCount);
+}
+
+<!-- CSS tùy chỉnh cho trang báo cáo -->
+<style>
+    .chart-container {
+        position: relative;
+        height: 400px;
+        width: 100%;
+    }
+
+    .role-distribution-list {
+        list-style-type: none;
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+
+        .role-distribution-list li {
+            display: inline-block;
+            background-color: #f1f3f5;
+            border-radius: 12px;
+            padding: 4px 10px;
+            margin: 2px;
+            font-size: 0.85rem;
+            color: #495057;
+        }
+</style>
+
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">@ViewData["Title"]</h1>
+        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-download fa-sm text-white-50"></i> Xuất Báo cáo
+        </a>
+    </div>
+
+    <!-- Hàng chứa các biểu đồ -->
+    <div class="row">
+        <!-- Biểu đồ cột: Số lượng nhân sự -->
+        <div class="col-xl-7 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Số lượng Nhân sự theo Cấp độ</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="levelUserCountChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ radar: So sánh năng lực -->
+        <div class="col-xl-5 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Điểm Kỹ năng Trung bình</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="levelAvgScoreChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bảng dữ liệu chi tiết -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Bảng Thống kê Chi tiết theo Cấp độ</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                    <thead>
+                        <tr class="text-center">
+                            <th>Cấp độ (Level)</th>
+                            <th>Số lượng Nhân sự</th>
+                            <th>Tỷ lệ (%)</th>
+                            <th>Điểm Kỹ năng TB</th>
+                            <th>Phân bổ Vai trò</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var percentage = totalUsers > 0 ? (double)item.UserCount / totalUsers * 100 : 0;
+                            <tr>
+                                <td><strong>@item.LevelName</strong></td>
+                                <td class="text-center">@item.UserCount</td>
+                                <td class="text-center">@percentage.ToString("0.00")%</td>
+                                <td class="text-center">@item.AverageSkillScore.ToString("0.0")</td>
+                                <td>
+                                    @if (item.RoleDistribution.Any())
+                                    {
+                                        <ul class="role-distribution-list">
+                                            @foreach (var role in item.RoleDistribution)
+                                            {
+                                                <li>@role.RoleName: <strong>@role.UserCount</strong></li>
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Chưa có dữ liệu</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr class="font-weight-bold table-active">
+                            <td class="text-right">Tổng cộng</td>
+                            <td class="text-center">@totalUsers</td>
+                            <td class="text-center">100%</td>
+                            <td class="text-center">-</td>
+                            <td>-</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary mb-4">
+        <i class="fas fa-arrow-left"></i> Quay lại trang Báo cáo
+    </a>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Lấy dữ liệu từ Model
+        const reportData = @Html.Raw(Json.Serialize(Model));
+        const levelLabels = reportData.map(item => item.levelName);
+        const userCounts = reportData.map(item => item.userCount);
+        const avgScores = reportData.map(item => item.averageSkillScore);
+
+        const backgroundColors = ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'];
+        const borderColors = ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'];
+
+        // 1. Biểu đồ Cột: Số lượng nhân sự
+        const barCtx = document.getElementById('levelUserCountChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: levelLabels,
+                datasets: [{
+                    label: 'Số lượng nhân sự',
+                    data: userCounts,
+                    backgroundColor: backgroundColors,
+                    borderColor: borderColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // 2. Biểu đồ Radar: So sánh điểm kỹ năng
+        const radarCtx = document.getElementById('levelAvgScoreChart').getContext('2d');
+        new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: levelLabels,
+                datasets: [{
+                    label: 'Điểm kỹ năng trung bình',
+                    data: avgScores,
+                    fill: true,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    pointBackgroundColor: 'rgb(255, 99, 132)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(255, 99, 132)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                elements: {
+                    line: {
+                        borderWidth: 3
+                    }
+                },
+                scales: {
+                    r: {
+                        angleLines: { display: false },
+                        suggestedMin: 0,
+                        // === SỬA LỖI: Cập nhật thang điểm tối đa là 10 ===
+                        suggestedMax: 10
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+}

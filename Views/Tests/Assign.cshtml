@@ -1,0 +1,100 @@
+﻿@model TestMaster.ViewModels.AssignTestViewModel
+@{
+    ViewData["Title"] = "Giao bài test";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    // --- LOGIC CHỌN LAYOUT ---
+    // Tự động chọn layout phù hợp với vai trò của người dùng
+    if (User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_HRLayout.cshtml";
+    }
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-2 text-gray-800">@ViewData["Title"]</h1>
+    <p class="mb-4">Giao bài test: <strong>@Model.TestTitle</strong></p>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form asp-action="Assign">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="TestId" />
+                <input type="hidden" asp-for="TestTitle" />
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="AssignTo" class="control-label"></label>
+                            <div class="mt-2">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" asp-for="AssignTo" id="assignToUser" value="User" checked>
+                                    <label class="form-check-label" for="assignToUser">Nhân viên</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" asp-for="AssignTo" id="assignToDept" value="Department">
+                                    <label class="form-check-label" for="assignToDept">Phòng ban</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" asp-for="AssignTo" id="assignToLevel" value="Level">
+                                    <label class="form-check-label" for="assignToLevel">Cấp độ</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="user-select" class="form-group">
+                            <label asp-for="SelectedUserId" class="control-label"></label>
+                            <select asp-for="SelectedUserId" class="form-control" asp-items="Model.UsersList">
+                                <option value="">-- Chọn một nhân viên --</option>
+                            </select>
+                        </div>
+
+                        <div id="department-select" class="form-group" style="display:none;">
+                            <label asp-for="SelectedDepartmentId" class="control-label"></label>
+                            <select asp-for="SelectedDepartmentId" class="form-control" asp-items="Model.DepartmentsList">
+                                <option value="">-- Chọn một phòng ban --</option>
+                            </select>
+                        </div>
+
+                        <div id="level-select" class="form-group" style="display:none;">
+                            <label asp-for="SelectedLevelId" class="control-label"></label>
+                            <select asp-for="SelectedLevelId" class="form-control" asp-items="Model.LevelsList">
+                                <option value="">-- Chọn một cấp độ --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="DueDate" class="control-label"></label>
+                            <input asp-for="DueDate" class="form-control" type="datetime-local" />
+                            <span asp-validation-for="DueDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <input type="submit" value="Giao bài" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            function toggleAssignTo() {
+                var selectedValue = $("input[name='AssignTo']:checked").val();
+                $("#user-select, #department-select, #level-select").hide();
+                if (selectedValue === "User") $("#user-select").show();
+                else if (selectedValue === "Department") $("#department-select").show();
+                else if (selectedValue === "Level") $("#level-select").show();
+            }
+            toggleAssignTo();
+            $("input[name='AssignTo']").change(toggleAssignTo);
+        });
+    </script>
+}

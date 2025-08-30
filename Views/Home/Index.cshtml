@@ -1,18 +1,19 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Trang chủ";
 }
 
 <style>
-    /* Container chính */
     .home-container {
-        max-width: 1200px;
+        max-width: 960px;
         margin: 40px auto;
         padding: 20px;
-        text-align: center;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    /* Tiêu đề */
+    .welcome-section {
+        text-align: center;
+    }
+
     .welcome-title {
         font-size: 2.5rem;
         font-weight: bold;
@@ -26,75 +27,104 @@
         margin-bottom: 30px;
     }
 
-    /* Grid card */
     .card-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
+        grid-template-columns: 1fr; /* Mặc định 1 cột trên mobile */
+        gap: 25px;
     }
 
-    /* Card chung */
+    /* Trên màn hình lớn hơn, chuyển sang bố cục 2 cột */
+    @@media (min-width: 768px) {
+        .card-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
     .role-card {
         border-radius: 15px;
         padding: 25px;
         color: white;
         box-shadow: 0 6px 12px rgba(0,0,0,0.1);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
+        text-align: left;
     }
 
-    .role-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 24px rgba(0,0,0,0.15);
-    }
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
 
-    /* Card theo role */
-    .role-card.admin {
-        background: linear-gradient(135deg, #e74c3c, #c0392b);
-    }
+        .role-card.admin {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
 
-    .role-card.manager {
-        background: linear-gradient(135deg, #3498db, #2980b9);
-    }
+        .role-card.hr {
+            background: linear-gradient(135deg, #f39c12, #d35400);
+        }
 
-    .role-card.employee {
-        background: linear-gradient(135deg, #27ae60, #1e8449);
-    }
+        .role-card.manager {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
 
-    /* Nút */
+        .role-card.employee {
+            background: linear-gradient(135deg, #27ae60, #1e8449);
+        }
+
     .btn {
         display: inline-block;
         margin-top: 15px;
         padding: 10px 18px;
         border-radius: 8px;
         background: white;
-        color: inherit;
         text-decoration: none;
         font-weight: bold;
         transition: background 0.2s ease, color 0.2s ease;
     }
 
+    .role-card.admin .btn {
+        color: #c0392b;
+    }
+
+    .role-card.hr .btn {
+        color: #d35400;
+    }
+
+    .role-card.manager .btn {
+        color: #2980b9;
+    }
+
+    .role-card.employee .btn {
+        color: #1e8449;
+    }
+
+    .role-card .btn:hover {
+        color: white;
+    }
+
     .role-card.admin .btn:hover {
         background: #c0392b;
-        color: white;
+    }
+
+    .role-card.hr .btn:hover {
+        background: #d35400;
     }
 
     .role-card.manager .btn:hover {
         background: #2980b9;
-        color: white;
     }
 
     .role-card.employee .btn:hover {
         background: #1e8449;
-        color: white;
     }
 </style>
 
 <div class="home-container">
+
     <div class="welcome-section">
-        <h1 class="welcome-title">👋 Welcome to TestMaster</h1>
+        <h1 class="welcome-title">👋 Chào mừng đến với TestMaster</h1>
         <p class="welcome-text">
             Đây là hệ thống <strong>Employee Assessment</strong>.
-            Hãy chọn vai trò để bắt đầu.
+            Vui lòng chọn vai trò của bạn để tiếp tục.
         </p>
     </div>
 
@@ -102,19 +132,25 @@
         <div class="role-card admin">
             <h2>👑 Admin</h2>
             <p>Quản lý toàn bộ hệ thống, người dùng và báo cáo.</p>
-            <a href="/AdminDashboard" class="btn">Go to Admin Dashboard</a>
+            <a asp-controller="AdminDashboard" asp-action="Index" class="btn">Đi đến trang Admin</a>
+        </div>
+
+        <div class="role-card hr">
+            <h2>👥 HR</h2>
+            <p>Quản lý nhân sự, ngân hàng câu hỏi và các bài test.</p>
+            <a asp-controller="HRDashboard" asp-action="Index" class="btn">Đi đến trang HR</a>
         </div>
 
         <div class="role-card manager">
             <h2>📊 Manager</h2>
             <p>Theo dõi tiến độ nhân viên, quản lý nhóm của bạn.</p>
-            <a href="/ManagerDashboard" class="btn">Go to Manager Dashboard</a>
+            <a asp-controller="ManagerDashboard" asp-action="Index" class="btn">Đi đến trang Manager</a>
         </div>
 
         <div class="role-card employee">
             <h2>💼 Employee</h2>
             <p>Xem nhiệm vụ và đánh giá của bạn.</p>
-            <a href="/EmployeeDashboard" class="btn">Go to Employee Dashboard</a>
+            <a asp-controller="EmployeeDashboard" asp-action="Index" class="btn">Đi đến trang Nhân viên</a>
         </div>
     </div>
 </div>

@@ -1,0 +1,40 @@
+﻿@model TestMaster.Models.UserTestSession
+
+@{
+    ViewData["Title"] = "Xác nhận xóa";
+    // --- LOGIC CHỌN LAYOUT ---
+    // Tự động chọn layout phù hợp với vai trò của người dùng
+    if (User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_HRLayout.cshtml";
+    }
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">@ViewData["Title"]</h1>
+    <h3>Bạn có chắc chắn muốn xóa bài làm này không?</h3>
+    <p class="text-danger">Hành động này không thể hoàn tác và sẽ xóa vĩnh viễn kết quả của nhân viên.</p>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-2">Nhân viên</dt>
+                <dd class="col-sm-10">@Html.DisplayFor(model => model.User.FullName)</dd>
+                <dt class="col-sm-2">Bài thi</dt>
+                <dd class="col-sm-10">@Html.DisplayFor(model => model.Test.Title)</dd>
+                <dt class="col-sm-2">Ngày nộp</dt>
+                <dd class="col-sm-10">@Model.EndTime?.ToString("dd/MM/yyyy HH:mm")</dd>
+            </dl>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="SessionId" />
+                <input type="submit" value="Xóa" class="btn btn-danger" /> |
+                <a asp-action="Index">Hủy</a>
+            </form>
+        </div>
+    </div>
+</div>

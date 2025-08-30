@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Cấu hình hệ thống";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">@ViewData["Title"]</h1>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Cài đặt chung</h6>
+                </div>
+                <div class="card-body">
+                    <p>Quản lý các thông số và cài đặt chung cho toàn bộ hệ thống.</p>
+                    <a asp-action="SystemConfiguration" class="btn btn-primary">Đi đến Cài đặt</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Lịch sử hoạt động (Audit Log)</h6>
+                </div>
+                <div class="card-body">
+                    <p>Xem lại lịch sử các hành động quan trọng đã được thực hiện bởi người dùng trong hệ thống.</p>
+                    <a asp-action="AuditLog" class="btn btn-info">Xem Lịch sử</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

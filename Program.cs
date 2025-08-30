@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TestMaster.Models;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services
@@ -26,7 +27,7 @@ builder.Services.AddAuthentication("MyCookieAuth")
         options.Cookie.SameSite = SameSiteMode.Lax;
         options.Cookie.MaxAge = null;   // 🔑 quan trọng
 
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(5); // trong phiên
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(15); // trong phiên
 
         options.SlidingExpiration = true;
     });

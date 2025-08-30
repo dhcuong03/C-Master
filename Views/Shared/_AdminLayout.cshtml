@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Trang Quản Trị</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <!-- Link tới Font Awesome để hiển thị icon (nếu bạn chưa có) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-    <!-- Link tới file CSS riêng cho trang Admin -->
     <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
     <style>
         /* Giao diện tổng thể */
@@ -84,7 +82,6 @@
                 margin-bottom: 20px;
                 box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
             }
-
     </style>
 </head>
 <body>
@@ -95,7 +92,7 @@
                 <h3>Admin Panel</h3>
             </div>
             <ul class="list-unstyled components">
-                <li class="active">
+                <li>
                     <a asp-controller="AdminDashboard" asp-action="Index">
                         <i class="fas fa-tachometer-alt"></i>
                         Dashboard
@@ -125,7 +122,38 @@
                         Quản lý bài test
                     </a>
                 </li>
-                <!-- Thêm các link chức năng khác ở đây -->
+                <li>
+                    <a asp-controller="Tests" asp-action="ManageAssignments">
+                        <i class="fas fa-tasks"></i>
+                        Quản lý Giao bài
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Grading" asp-action="Index">
+                        <i class="fas fa-check-double"></i>
+                        Chấm bài & Đánh giá
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Feedbacks" asp-action="Index">
+                        <i class="fas fa-comment-alt"></i>
+                        Quản lý Góp ý
+                    </a>
+                </li>
+                <!-- === MỤC BÁO CÁO ĐÃ ĐƯỢC THÊM VÀO ĐÂY === -->
+                <li>
+                    <a asp-controller="AdminReports" asp-action="Index">
+                        <i class="fas fa-chart-area"></i>
+                        Báo cáo & Thống kê
+                    </a>
+                </li>
+                <hr style="background-color: #47748b;">
+                <li>
+                    <a asp-controller="Settings" asp-action="Index">
+                        <i class="fas fa-cogs"></i>
+                        Cấu hình hệ thống
+                    </a>
+                </li>
             </ul>
         </nav>
 
@@ -133,7 +161,6 @@
         <div id="content">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
-                    <!-- Có thể thêm nút toggle sidebar ở đây -->
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ms-auto">
                             @if (User.Identity != null && User.Identity.IsAuthenticated)

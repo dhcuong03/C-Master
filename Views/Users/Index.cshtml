@@ -1,161 +1,200 @@
 ﻿@model IEnumerable<TestMaster.Models.User>
 
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    // Đặt tiêu đề cho trang
+    ViewData["Title"] = "Danh sách người dùng";
+
+    // --- LOGIC CHỌN LAYOUT ---
+    // Tự động chọn layout phù hợp với vai trò của người dùng
+    if (User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_HRLayout.cshtml";
+    }
 }
 
-<h1 class="page-title">Danh sách người dùng</h1>
-
-<p>
-    <a class="btn-create" asp-action="Create">+ Thêm mới</a>
-</p>
-
-<table class="custom-table">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.Username)</th>
-            <th>@Html.DisplayNameFor(model => model.PasswordHash)</th>
-            <th>@Html.DisplayNameFor(model => model.FullName)</th>
-            <th>@Html.DisplayNameFor(model => model.Email)</th>
-            <th>@Html.DisplayNameFor(model => model.CreatedAt)</th>
-            <th>@Html.DisplayNameFor(model => model.UpdatedAt)</th>
-            <th>@Html.DisplayNameFor(model => model.Department)</th>
-            <th>@Html.DisplayNameFor(model => model.Level)</th>
-            <th>@Html.DisplayNameFor(model => model.Role)</th>
-            <th>Thao tác</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.Username)</td>
-                <td>@Html.DisplayFor(modelItem => item.PasswordHash)</td>
-                <td>@Html.DisplayFor(modelItem => item.FullName)</td>
-                <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
-                <td>@Html.DisplayFor(modelItem => item.UpdatedAt)</td>
-                <td>@Html.DisplayFor(modelItem => item.Department.DepartmentName)</td>
-                <td>@Html.DisplayFor(modelItem => item.Level.LevelName)</td>
-                <td>@Html.DisplayFor(modelItem => item.Role.RoleName)</td>
-                <td>
-                    <a class="btn-action btn-edit" asp-action="Edit" asp-route-id="@item.UserId">Sửa</a>
-                    <a class="btn-action btn-detail" asp-action="Details" asp-route-id="@item.UserId">Chi tiết</a>
-                    <a class="btn-action btn-delete" asp-action="Delete" asp-route-id="@item.UserId">Xóa</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
+<!--
+    CSS ĐÃ ĐƯỢC NÂNG CẤP HOÀN TOÀN
+    Sử dụng biến màu để dễ quản lý và phong cách hiện đại hơn.
+-->
 <style>
+    :root {
+        --primary-color-hr: #007bff;
+        --success-color-hr: #28a745;
+        --info-color-hr: #17a2b8;
+        --warning-color-hr: #ffc107;
+        --danger-color-hr: #dc3545;
+        --light-gray-hr: #f8f9fa;
+        --border-color-hr: #dee2e6;
+        --text-dark-hr: #343a40;
+        --text-light-hr: #ffffff;
+        --shadow-sm-hr: 0 .125rem .25rem rgba(0, 0, 0, .075);
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color-hr);
+    }
+
     .page-title {
-        font-size: 28px;
-        font-weight: 700;
-        margin-bottom: 25px;
-        color: #2c3e50;
-        border-left: 5px solid #27ae60;
-        padding-left: 10px;
+        font-size: 1.75rem; /* 28px */
+        font-weight: 600;
+        color: var(--text-dark-hr);
     }
 
     .btn-create {
-        display: inline-block;
-        padding: 10px 18px;
-        background: linear-gradient(135deg, #27ae60, #2ecc71);
-        color: #fff;
-        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem; /* Khoảng cách giữa icon và text */
+        padding: 0.625rem 1.25rem; /* 10px 20px */
+        background-color: var(--primary-color-hr);
+        color: var(--text-light-hr);
+        font-weight: 500;
         text-decoration: none;
-        border-radius: 8px;
-        transition: 0.3s;
-        box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+        border-radius: 0.375rem; /* 6px */
+        border: none;
+        transition: all 0.2s ease-in-out;
+        box-shadow: var(--shadow-sm-hr);
     }
 
         .btn-create:hover {
-            background: linear-gradient(135deg, #219150, #27ae60);
+            background-color: #0056b3;
             transform: translateY(-2px);
+            box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
         }
+
+    /* Card chứa table */
+    .table-container-card {
+        background-color: var(--text-light-hr);
+        border-radius: 0.75rem; /* 12px */
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
 
     /* Table */
     .custom-table {
         width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.12);
-        background-color: #fff;
-        margin-top: 15px;
+        border-collapse: collapse;
+        margin-top: 1rem;
     }
 
-        .custom-table thead {
-            background: linear-gradient(135deg, #34495e, #2c3e50);
-            color: #fff;
-        }
-
-        .custom-table th,
-        .custom-table td {
-            padding: 14px 16px;
+        .custom-table thead th {
+            background-color: var(--light-gray-hr);
+            color: var(--text-dark-hr);
+            padding: 1rem;
             text-align: left;
-            font-size: 15px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .custom-table th {
             font-weight: 600;
             text-transform: uppercase;
-            font-size: 13px;
+            font-size: 0.8rem; /* 13px */
             letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border-color-hr);
         }
 
-        .custom-table tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
+        .custom-table tbody td {
+            padding: 1rem;
+            font-size: 0.9375rem; /* 15px */
+            border-bottom: 1px solid var(--border-color-hr);
+            vertical-align: middle;
+        }
+
+        .custom-table tbody tr:last-child td {
+            border-bottom: none;
         }
 
         .custom-table tbody tr:hover {
-            background-color: #eef6ff;
-            transition: 0.2s;
+            background-color: #f1f8ff;
         }
 
     /* Action Buttons */
-    .btn-action {
-        display: inline-block;
-        padding: 8px 14px;
-        margin-right: 6px;
-        font-size: 13px;
-        font-weight: 600;
-        border-radius: 6px;
-        text-decoration: none;
-        color: #fff;
-        transition: 0.3s;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    .actions-cell {
+        display: flex;
+        gap: 0.5rem;
     }
+
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border: none;
+        border-radius: 50%; /* Bo tròn thành hình tròn */
+        text-decoration: none;
+        color: var(--text-light-hr);
+        transition: all 0.2s ease-in-out;
+        font-size: 1rem; /* Kích thước icon */
+    }
+
+        .btn-action:hover {
+            transform: scale(1.1);
+            filter: brightness(1.1);
+        }
 
     .btn-edit {
-        background-color: #3498db;
+        background-color: var(--info-color-hr);
     }
-
-        .btn-edit:hover {
-            background-color: #2980b9;
-            transform: scale(1.05);
-        }
 
     .btn-detail {
-        background-color: #8e44ad;
+        background-color: #6f42c1;
     }
-
-        .btn-detail:hover {
-            background-color: #71368a;
-            transform: scale(1.05);
-        }
-
+    /* Màu tím đẹp hơn */
     .btn-delete {
-        background-color: #e74c3c;
+        background-color: var(--danger-color-hr);
     }
-
-        .btn-delete:hover {
-            background-color: #c0392b;
-            transform: scale(1.05);
-        }
 
 </style>
+
+<div class="table-container-card">
+    <div class="page-header">
+        <h1 class="page-title">Quản lý người dùng</h1>
+        <a class="btn-create" asp-action="Create">
+            <i class="fas fa-plus"></i>
+            <span>Thêm mới</span>
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <!-- CÁC CỘT ĐÃ ĐƯỢC CẬP NHẬT -->
+                    <th>@Html.DisplayNameFor(model => model.Username)</th>
+                    <th>@Html.DisplayNameFor(model => model.FullName)</th>
+                    <th>@Html.DisplayNameFor(model => model.Email)</th>
+                    <th>@Html.DisplayNameFor(model => model.Department)</th>
+                    <th>@Html.DisplayNameFor(model => model.Level)</th>
+                    <th>@Html.DisplayNameFor(model => model.Role)</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <!-- CÁC CỘT ĐÃ ĐƯỢC CẬP NHẬT -->
+                        <td>@Html.DisplayFor(modelItem => item.Username)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Department.DepartmentName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Level.LevelName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Role.RoleName)</td>
+                        <td>
+                            <div class="actions-cell">
+                                <a class="btn-action btn-edit" asp-action="Edit" asp-route-id="@item.UserId" title="Sửa"><i class="fas fa-pencil-alt"></i></a>
+                                <a class="btn-action btn-detail" asp-action="Details" asp-route-id="@item.UserId" title="Chi tiết"><i class="fas fa-eye"></i></a>
+                                <a class="btn-action btn-delete" asp-action="Delete" asp-route-id="@item.UserId" title="Xóa"><i class="fas fa-trash-alt"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

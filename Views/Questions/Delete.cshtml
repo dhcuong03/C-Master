@@ -2,6 +2,16 @@
 
 @{
     ViewData["Title"] = "Delete";
+    // --- LOGIC CHỌN LAYOUT ---
+    // Tự động chọn layout phù hợp với vai trò của người dùng
+    if (User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_HRLayout.cshtml";
+    }
 }
 
 <h1>Delete</h1>

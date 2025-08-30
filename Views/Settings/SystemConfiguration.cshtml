@@ -1,0 +1,52 @@
+﻿@model List<TestMaster.Models.SystemConfiguration>
+
+@{
+    ViewData["Title"] = "Quản lý Cấu hình";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-2 text-gray-800">@ViewData["Title"]</h1>
+    <p class="mb-4">Chỉnh sửa các giá trị cấu hình cho hệ thống. Các thay đổi sẽ có hiệu lực ngay lập tức.</p>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form asp-action="SystemConfiguration" method="post">
+                @Html.AntiForgeryToken()
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Khóa (Key)</th>
+                            <th>Giá trị (Value)</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    <label class="font-weight-bold">@Model[i].ConfigKey</label>
+                                    <input type="hidden" asp-for="@Model[i].ConfigKey" />
+                                </td>
+                                <td>
+                                    <input asp-for="@Model[i].ConfigValue" class="form-control" />
+                                </td>
+                                <td>
+                                    <small class="text-muted">@Model[i].Description</small>
+                                    <input type="hidden" asp-for="@Model[i].Description" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            </form>
+        </div>
+    </div>
+</div>

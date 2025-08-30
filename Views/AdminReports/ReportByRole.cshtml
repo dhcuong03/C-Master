@@ -1,0 +1,188 @@
+﻿@model IEnumerable<TestMaster.ViewModels.ReportByRoleViewModel>
+
+@{
+    ViewData["Title"] = "Báo cáo theo Vai trò";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var totalUsers = Model.Sum(item => item.UserCount);
+}
+
+<!-- CSS tùy chỉnh cho trang báo cáo -->
+<style>
+    .chart-container {
+        position: relative;
+        height: 400px;
+        width: 100%;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">@ViewData["Title"]</h1>
+        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-download fa-sm text-white-50"></i> Xuất Báo cáo
+        </a>
+    </div>
+
+    <!-- Hàng chứa các biểu đồ -->
+    <div class="row">
+        <!-- Biểu đồ cột -->
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Số lượng Nhân sự theo Vai trò</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="roleBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ tròn -->
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Tỷ lệ Cơ cấu Nhân sự</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="roleDoughnutChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bảng dữ liệu chi tiết -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Bảng Thống kê Chi tiết</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                    <thead>
+                        <tr class="text-center">
+                            <th>Vai trò</th>
+                            <th>Số lượng Nhân sự</th>
+                            <th>Tỷ lệ (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var percentage = totalUsers > 0 ? (double)item.UserCount / totalUsers * 100 : 0;
+                            <tr>
+                                <td>@item.RoleName</td>
+                                <td class="text-center">@item.UserCount</td>
+                                <td class="text-center">@percentage.ToString("0.00")%</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr class="font-weight-bold table-active">
+                            <td class="text-right">Tổng cộng</td>
+                            <td class="text-center">@totalUsers</td>
+                            <td class="text-center">100%</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary mb-4">
+        <i class="fas fa-arrow-left"></i> Quay lại trang Báo cáo
+    </a>
+</div>
+
+@section Scripts {
+    <!-- Thêm thư viện Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Lấy dữ liệu từ Model của C# và chuyển sang JavaScript
+        const reportData = @Html.Raw(Json.Serialize(Model));
+        const roleLabels = reportData.map(item => item.roleName);
+        const userCounts = reportData.map(item => item.userCount);
+
+        // Mảng màu sắc ngẫu nhiên cho biểu đồ
+        const backgroundColors = [
+            '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b',
+            '#858796', '#5a5c69', '#f8f9fc', '#1a252f', '#34495e'
+        ];
+
+        // 1. Vẽ Biểu đồ Cột (Bar Chart)
+        const barCtx = document.getElementById('roleBarChart').getContext('2d');
+        const roleBarChart = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: roleLabels,
+                datasets: [{
+                    label: 'Số lượng nhân sự',
+                    data: userCounts,
+                    backgroundColor: backgroundColors,
+                    borderColor: backgroundColors.map(color => color.replace('0.2', '1')),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1 // Đảm bảo trục y chỉ hiển thị số nguyên
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // Ẩn chú thích vì chỉ có 1 bộ dữ liệu
+                    }
+                }
+            }
+        });
+
+        // 2. Vẽ Biểu đồ Tròn (Doughnut Chart)
+        const doughnutCtx = document.getElementById('roleDoughnutChart').getContext('2d');
+        const roleDoughnutChart = new Chart(doughnutCtx, {
+            type: 'doughnut',
+            data: {
+                labels: roleLabels,
+                datasets: [{
+                    data: userCounts,
+                    backgroundColor: backgroundColors,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                    const percentage = (context.parsed / total * 100).toFixed(2) + '%';
+                                    label += `${context.raw} (${percentage})`;
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

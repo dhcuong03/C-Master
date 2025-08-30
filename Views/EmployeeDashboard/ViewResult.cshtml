@@ -1,0 +1,291 @@
+﻿@model TestMaster.ViewModels.TestResultViewModel
+@{
+    ViewData["Title"] = "Kết quả bài test";
+    Layout = "~/Views/Shared/_EmployeeLayout.cshtml";
+}
+
+<!-- Thêm một vài style tùy chỉnh để giao diện đẹp hơn -->
+<style>
+    .summary-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-left: 4px solid #4e73df; /* Mặc định là màu xanh dương */
+    }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .summary-card.status-pass {
+            border-left-color: #1cc88a; /* Xanh lá cho "ĐẠT" */
+        }
+
+        .summary-card.status-fail {
+            border-left-color: #e74a3b; /* Đỏ cho "KHÔNG ĐẠT" */
+        }
+
+        .summary-card.status-pending {
+            border-left-color: #f6c23e; /* Vàng cho "CHỜ CHẤM" */
+        }
+
+        .summary-card.passing-score {
+            border-left-color: #36b9cc; /* Xanh ngọc cho "Điểm qua môn" */
+        }
+
+    .progress-bar {
+        background-color: #4e73df;
+    }
+
+        .progress-bar.bg-success {
+            background-color: #1cc88a !important;
+        }
+
+        .progress-bar.bg-danger {
+            background-color: #e74a3b !important;
+        }
+
+    .answer-card .card-header {
+        background-color: #f8f9fc;
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">Kết quả bài test: @Model.Session.Test.Title</h1>
+            <p class="text-muted mb-0">
+                Hoàn thành lúc: @Model.Session.EndTime?.ToString("HH:mm, dd/MM/yyyy")
+            </p>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary shadow-sm me-2" data-toggle="modal" data-target="#feedbackModal">
+                <i class="fas fa-comment-alt fa-sm"></i> Gửi góp ý
+            </button>
+            <a asp-action="MyTests" asp-controller="EmployeeDashboard" class="btn btn-secondary shadow-sm">
+                <i class="fas fa-arrow-left fa-sm"></i> Quay lại
+            </a>
+        </div>
+    </div>
+
+    <!-- Hàng thẻ thông tin tổng kết -->
+    <div class="row">
+        <!-- Thẻ Điểm số -->
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card summary-card shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Điểm số của bạn</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Session.FinalScore?.ToString("0.##") / 10</div>
+                            <div class="progress mt-2" style="height: 8px;">
+                                @{
+                                    var scorePercentage = (Model.Session.FinalScore ?? 0) * 10;
+                                    var progressClass = Model.Session.IsPassed == true ? "bg-success" : "bg-danger";
+                                }
+                                <div class="progress-bar @progressClass" role="progressbar" style="width: @scorePercentage%" aria-valuenow="@scorePercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-star fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thẻ Trạng thái -->
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card @(Model.Session.IsPassed == true ? "summary-card status-pass" : (Model.Session.IsPassed == false ? "summary-card status-fail" : "summary-card status-pending")) shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold @(Model.Session.IsPassed == true ? "text-success" : (Model.Session.IsPassed == false ? "text-danger" : "text-warning")) text-uppercase mb-1">Trạng thái</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                @if (Model.Session.IsPassed == true)
+                                {
+                                    <span class="text-success">ĐẠT</span>
+                                }
+                                else if (Model.Session.IsPassed == false)
+                                {
+
+                                    <span class="text-danger">KHÔNG ĐẠT</span>
+                                }
+                                else
+                                {
+
+                                    <span class="text-warning">CHỜ CHẤM</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            @if (Model.Session.IsPassed == true)
+                            {
+                                <i class="fas fa-check-circle fa-2x text-success"></i>
+                            }
+                            else if (Model.Session.IsPassed == false)
+                            {
+
+                                <i class="fas fa-times-circle fa-2x text-danger"></i>
+                            }
+                            else
+                            {
+
+                                <i class="fas fa-hourglass-half fa-2x text-warning"></i>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thẻ Điểm qua môn -->
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card summary-card passing-score shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Điểm qua môn</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Session.Test.PassingScore.ToString("0.##")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-bullseye fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chi tiết bài làm -->
+    <h4 class="h4 mb-3 text-gray-800">Chi tiết bài làm</h4>
+    @for (int i = 0; i < Model.Session.UserAnswers.Count; i++)
+    {
+        var answer = Model.Session.UserAnswers.ToList()[i];
+        var question = answer.Question;
+
+        <div class="card shadow mb-3 answer-card">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Câu @(i + 1): @question.Content</h6>
+            </div>
+            <div class="card-body">
+                @if (question.QuestionType == "ESSAY")
+                {
+                    <h6 class="small font-weight-bold">Câu trả lời của bạn:</h6>
+                    <p class="bg-light p-3 rounded" style="white-space: pre-wrap;">@answer.AnswerText</p>
+                    <hr />
+                    <h6 class="small font-weight-bold">Đánh giá của người chấm:</h6>
+                    @if (answer.GradedAt.HasValue)
+                    {
+                        <p><strong>Điểm:</strong> @(answer.Score?.ToString("0.##") ?? "0")</p>
+                        <p><strong>Ghi chú:</strong> @(answer.GraderNotes ?? "Không có ghi chú.")</p>
+                    }
+                    else
+                    {
+                        <p class="text-muted"><em>Câu trả lời này chưa được chấm.</em></p>
+                    }
+                }
+                else // Câu trắc nghiệm
+                {
+                    var correctOption = question.AnswerOptions.FirstOrDefault(o => o.IsCorrect == true);
+                    var userOption = question.AnswerOptions.FirstOrDefault(o => o.OptionId == answer.ChosenOptionId);
+                    var isCorrect = correctOption != null && userOption != null && correctOption.OptionId == userOption.OptionId;
+
+                    <dl class="row">
+                        <dt class="col-sm-3">Đáp án đúng:</dt>
+                        <dd class="col-sm-9 text-success font-weight-bold">
+                            <i class="fas fa-check-circle me-2"></i>
+                            @(correctOption?.OptionText ?? "N/A")
+                        </dd>
+
+                        <dt class="col-sm-3">Bạn đã chọn:</dt>
+                        <dd class="col-sm-9 @(isCorrect ? "text-success" : "text-danger")">
+                            @if (isCorrect)
+                            {
+                                <i class="fas fa-check me-2"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-times me-2"></i>
+                            }
+                            @(userOption?.OptionText ?? "Không trả lời")
+                        </dd>
+                    </dl>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<!-- ======================= FEEDBACK MODAL START ======================= -->
+<div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="feedbackModalLabel">Gửi góp ý về bài test: @Model.Session.Test.Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="feedbackForm">
+                    <input type="hidden" id="feedbackTestId" value="@Model.Session.Test.TestId" />
+                    <div class="mb-3">
+                        <label for="feedbackContent" class="form-label">Nội dung góp ý của bạn:</label>
+                        <textarea class="form-control" id="feedbackContent" rows="4" placeholder="Ví dụ: Câu hỏi số 5 có vẻ sai chính tả..." required></textarea>
+                    </div>
+                </form>
+                <div id="feedbackMessage" class="mt-2"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="submitFeedbackBtn">Gửi đi</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ======================== FEEDBACK MODAL END ======================== -->
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#submitFeedbackBtn").on("click", function () {
+                var testId = parseInt($("#feedbackTestId").val());
+                var content = $("#feedbackContent").val();
+                var messageDiv = $("#feedbackMessage");
+                var submitBtn = $(this);
+
+                if (!content.trim()) {
+                    messageDiv.html('<div class="alert alert-danger">Vui lòng nhập nội dung góp ý.</div>');
+                    return;
+                }
+
+                submitBtn.prop('disabled', true).text('Đang gửi...');
+
+                $.ajax({
+                    url: '@Url.Action("Submit", "Feedbacks")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ testId: testId, content: content }),
+                    success: function (response) {
+                        if (response.success) {
+                            messageDiv.html('<div class="alert alert-success">' + response.message + '</div>');
+                            $("#feedbackForm")[0].reset();
+                            setTimeout(function () {
+                                $('#feedbackModal').modal('hide');
+                                messageDiv.html('');
+                            }, 2000);
+                        } else {
+                            messageDiv.html('<div class="alert alert-danger">' + response.message + '</div>');
+                        }
+                    },
+                    error: function () {
+                        messageDiv.html('<div class="alert alert-danger">Đã có lỗi xảy ra. Vui lòng thử lại.</div>');
+                    },
+                    complete: function() {
+                        submitBtn.prop('disabled', false).text('Gửi đi');
+                    }
+                });
+            });
+        });
+    </script>
+}

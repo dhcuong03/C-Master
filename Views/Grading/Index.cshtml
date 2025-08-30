@@ -1,0 +1,87 @@
+﻿@model IEnumerable<TestMaster.Models.UserTestSession>
+
+@{
+    ViewData["Title"] = "Quản lý kết quả thi";
+    // --- LOGIC CHỌN LAYOUT ---
+    // Tự động chọn layout phù hợp với vai trò của người dùng
+    if (User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_HRLayout.cshtml";
+    }
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-2 text-gray-800">@ViewData["Title"]</h1>
+    <p class="mb-4">Danh sách tất cả các bài thi đã được nhân viên hoàn thành.</p>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Kết quả đã nộp</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Nhân viên</th>
+                            <th>Bài thi</th>
+                            <th>Ngày nộp</th>
+                            <th>Điểm số</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.User.FullName</td>
+                                <td>@item.Test.Title</td>
+                                <td>@item.EndTime?.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@item.FinalScore</td>
+                                <td>
+                                    @if (item.Status == "GRADED")
+                                    {
+                                        @if (item.IsPassed == true)
+                                        {
+                                            <span class="badge badge-success">Đạt</span>
+                                        }
+                                        else
+                                        {
+
+                                            <span class="badge badge-danger">Không đạt</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-warning">Chờ chấm</span>
+                                    }
+                                </td>
+                                <td>
+                                    <!-- Nút Chấm bài chỉ hiển thị khi bài chưa được chấm -->
+                                    @if (item.Status == "COMPLETED")
+                                    {
+                                        <a asp-action="GradeSession" asp-route-id="@item.SessionId" class="btn btn-primary btn-sm" title="Chấm bài"><i class="fas fa-pen-alt"></i></a>
+                                    }
+                                    <!-- Nút Xem chi tiết luôn hiển thị -->
+                                    <a asp-action="Details" asp-route-id="@item.SessionId" class="btn btn-info btn-sm" title="Xem chi tiết"><i class="fas fa-eye"></i></a>
+                                    <!-- Nút Xóa luôn hiển thị -->
+                                    <a asp-action="Delete" asp-route-id="@item.SessionId" class="btn btn-danger btn-sm" title="Xóa"><i class="fas fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

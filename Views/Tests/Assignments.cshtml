@@ -1,0 +1,90 @@
+﻿@model IEnumerable<TestMaster.Models.AssignmentViewModel>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Quản lý Giao bài";
+    // --- LOGIC CHỌN LAYOUT ---
+    // Tự động chọn layout phù hợp với vai trò của người dùng
+    if (User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_HRLayout.cshtml";
+    }
+}
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">@ViewData["Title"]</h1>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách các lượt giao bài</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Tên bài test</th>
+                            <th>Đối tượng</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày giao</th>
+                            <th class="text-center">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Assignment.Test?.Title</td>
+                                <td>
+                                    @if (item.Assignment.User != null)
+                                    {
+                                        <span class="badge bg-primary text-white">@item.Assignment.User.FullName</span>
+                                    }
+                                    else if (item.Assignment.Department != null)
+                                    {
+                                        <span class="badge bg-info text-white">Phòng: @item.Assignment.Department.DepartmentName</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.Status == "Đã nộp" || item.Status == "Đã chấm")
+                                    {
+                                        <span class="badge bg-success text-white">@item.Status</span>
+                                    }
+                                    else if (item.Status == "Đang làm")
+                                    {
+                                        <span class="badge bg-warning text-dark">@item.Status</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-light text-dark">@item.Status</span>
+                                    }
+                                </td>
+                                <td>@item.Assignment.AssignedAt?.ToString("dd/MM/yyyy")</td>
+                                <td class="text-center">
+                                    <form asp-action="DeleteAssignment" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn thu hồi lượt giao bài này không?');">
+                                        <input type="hidden" name="assignmentId" value="@item.Assignment.AssignmentId" />
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Thu hồi / Xóa">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

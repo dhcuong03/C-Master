@@ -1,0 +1,104 @@
+﻿@model TestMaster.Models.UserTestSession
+
+@{
+    ViewData["Title"] = "Chi tiết bài làm";
+   // --- LOGIC CHỌN LAYOUT ---
+    // Tự động chọn layout phù hợp với vai trò của người dùng
+    if (User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_HRLayout.cshtml";
+    }
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">@ViewData["Title"]</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Thông tin chung</h6>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Nhân viên:</dt>
+                <dd class="col-sm-9">@Model.User.FullName</dd>
+
+                <dt class="col-sm-3">Bài thi:</dt>
+                <dd class="col-sm-9">@Model.Test.Title</dd>
+
+                <dt class="col-sm-3">Điểm số:</dt>
+                <dd class="col-sm-9">@Model.FinalScore?.ToString("0.##") / 10</dd>
+
+                <dt class="col-sm-3">Kết quả:</dt>
+                <dd class="col-sm-9">
+                    @if (Model.IsPassed == true) { <span class="badge badge-success">Đạt</span> }
+                    else if (Model.IsPassed == false) { <span class="badge badge-danger">Không đạt</span> }
+                    else { <span class="badge badge-warning">Chưa chấm</span> }
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Các câu trả lời</h6>
+        </div>
+        <div class="card-body">
+            @foreach (var userAnswer in Model.UserAnswers.OrderBy(ua => ua.Question.QuestionId))
+            {
+                var question = userAnswer.Question;
+                var allOptions = question.AnswerOptions.ToList();
+
+                <div class="mb-4">
+                    <p><strong>Câu @(question.QuestionId): @question.Content</strong></p>
+                    
+                    @if (question.QuestionType == "MCQ" || question.QuestionType == "TRUE_FALSE")
+                    {
+                        <ul class="list-group">
+                            @foreach (var option in allOptions)
+                            {
+                                string itemClass = "list-group-item";
+                                // SỬA LỖI Ở ĐÂY: So sánh tường minh với true/false
+                                if (option.IsCorrect == true) { itemClass += " list-group-item-success"; }
+                                if (userAnswer.ChosenOptionId == option.OptionId && option.IsCorrect == false) { itemClass += " list-group-item-danger"; }
+
+                                <li class="@itemClass">
+                                    @if (userAnswer.ChosenOptionId == option.OptionId)
+                                    {
+                                        <i class="fas fa-check-circle mr-2 text-primary"></i> <strong>(Đã chọn)</strong>
+                                    }
+                                    @option.OptionText
+                                    @if (option.IsCorrect == true)
+                                    {
+                                        <span class="badge badge-success float-right">Đáp án đúng</span>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else if (question.QuestionType == "ESSAY")
+                    {
+                        <div class="alert alert-light border">
+                            <strong>Trả lời của nhân viên:</strong>
+                            <p class="mb-0" style="white-space: pre-wrap;">@userAnswer.AnswerText</p>
+                        </div>
+                         @if(userAnswer.GradedAt.HasValue)
+                        {
+                            <div class="alert alert-info">
+                                <strong>Điểm: @userAnswer.Score?.ToString("0.##") / Ghi chú:</strong> @userAnswer.GraderNotes
+                            </div>
+                        }
+                    }
+                </div>
+                <hr/>
+            }
+        </div>
+    </div>
+    
+    <div>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+    </div>
+</div>

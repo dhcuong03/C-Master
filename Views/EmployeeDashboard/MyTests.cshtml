@@ -1,0 +1,98 @@
+﻿@model IEnumerable<TestMaster.Models.Test>
+@{
+    ViewData["Title"] = "Bài test của tôi";
+    Layout = "~/Views/Shared/_EmployeeLayout.cshtml";
+    // THAY ĐỔI: Nhận về object UserTestSession thay vì chỉ string
+    var userSessions = ViewBag.UserSessions as Dictionary<int, UserTestSession>;
+}
+
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Bài test theo trình độ</h1>
+    <a asp-controller="EmployeeDashboard" asp-action="Index" class="btn btn-secondary shadow-sm">
+        <i class="fas fa-arrow-left fa-sm"></i> Quay lại Trang chủ
+    </a>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách bài test</h6>
+    </div>
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Tên bài test</th>
+                            <th>Mô tả</th>
+                            <th>Thời gian làm bài</th>
+                            <th>Trạng thái</th>
+                            <th style="width: 180px;">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var test in Model)
+                        {
+                            var status = "Chưa làm";
+                            var session = userSessions?.GetValueOrDefault(test.TestId);
+
+                            if (session != null)
+                            {
+                                status = (session.Status == "COMPLETED" || session.Status == "GRADED") ? "Đã hoàn thành" : "Đang làm";
+                            }
+
+                            <tr>
+                                <td>@test.Title</td>
+                                <td>@test.Description</td>
+                                <td>@test.DurationMinutes phút</td>
+                                <td>
+                                    @if (status == "Đã hoàn thành")
+                                    {
+                                        <span class="badge badge-success">@status</span>
+                                    }
+                                    else if (status == "Đang làm")
+                                    {
+                                        <span class="badge badge-warning">@status</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-secondary">@status</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (status == "Chưa làm")
+                                    {
+                                        <form asp-controller="TestSession" asp-action="StartTest" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="testId" value="@test.TestId" />
+                                            <button type="submit" class="btn btn-primary btn-sm">Bắt đầu làm bài</button>
+                                        </form>
+                                    }
+                                    else if (status == "Đã hoàn thành")
+                                    {
+                                        // THAY ĐỔI: Tạo link đến trang xem kết quả với sessionId
+                                        <a asp-controller="EmployeeDashboard" asp-action="ViewResult" asp-route-sessionId="@session.SessionId" class="btn btn-info btn-sm">Xem kết quả</a>
+                                    }
+                                    else // Đang làm
+                                    {
+                                        <form asp-controller="TestSession" asp-action="StartTest" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="testId" value="@test.TestId" />
+                                            <button type="submit" class="btn btn-warning btn-sm">Tiếp tục làm bài</button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p>Hiện tại chưa có bài test nào phù hợp với trình độ của bạn.</p>
+        }
+    </div>
+</div>

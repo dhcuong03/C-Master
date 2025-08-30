@@ -1,0 +1,191 @@
+﻿@{
+    ViewData["Title"] = "HR Dashboard";
+    Layout = "~/Views/Shared/_HRLayout.cshtml";
+}
+
+<!--
+    CSS ĐÃ ĐƯỢC NÂNG CẤP
+    Sử dụng chung hệ thống biến màu và phong cách với các trang khác.
+-->
+<style>
+    :root {
+        --primary-color-hr: #007bff;
+        --success-color-hr: #28a745;
+        --info-color-hr: #17a2b8;
+        --danger-color-hr: #dc3545;
+        --warning-color-hr: #ffc107;
+        --light-gray-hr: #f8f9fa;
+        --border-color-hr: #dee2e6;
+        --text-dark-hr: #343a40;
+        --text-light-hr: #ffffff;
+    }
+
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--text-dark-hr);
+    }
+
+    /* Thẻ thống kê được thiết kế lại */
+    .stat-card {
+        background-color: var(--text-light-hr);
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.12);
+        }
+
+    .stat-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        font-size: 1.75rem;
+        color: var(--text-light-hr);
+    }
+
+    .icon-primary {
+        background-color: var(--primary-color-hr);
+    }
+
+    .icon-success {
+        background-color: var(--success-color-hr);
+    }
+
+    .icon-info {
+        background-color: var(--info-color-hr);
+    }
+
+    .stat-content .stat-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #6c757d;
+        text-transform: uppercase;
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-content .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-dark-hr);
+    }
+
+    /* Thẻ chức năng được thiết kế lại */
+    .action-card-link {
+        text-decoration: none;
+    }
+
+    .action-card {
+        background-color: var(--text-light-hr);
+        border-radius: 0.75rem;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+        .action-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0.75rem 1.5rem rgba(0,0,0,0.12);
+        }
+
+        .action-card .action-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .action-card .action-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark-hr);
+            margin-bottom: 0.5rem;
+        }
+
+        .action-card .action-description {
+            color: #6c757d;
+        }
+</style>
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="page-header">
+        <h1 class="page-title">@ViewData["Title"]</h1>
+    </div>
+
+    <!-- Hàng thẻ thống kê -->
+    <div class="row">
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="stat-card">
+                <div class="stat-icon icon-primary">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Tổng số Nhân viên</div>
+                    <div class="stat-value">@ViewData["EmployeeCount"]</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="stat-card">
+                <div class="stat-icon icon-success">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Tổng số Phòng ban</div>
+                    <div class="stat-value">@ViewData["DepartmentCount"]</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="stat-card">
+                <div class="stat-icon icon-info">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Tổng số Bài test</div>
+                    <div class="stat-value">@ViewData["TestCount"]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hàng thẻ chức năng -->
+    <div class="row mt-4">
+        <div class="col-lg-6 mb-4">
+            <a asp-controller="Users" asp-action="Index" class="action-card-link">
+                <div class="action-card">
+                    <i class="fas fa-user-cog action-icon" style="color: var(--primary-color-hr);"></i>
+                    <h5 class="action-title">Quản lý Nhân sự</h5>
+                    <p class="action-description">Thêm, sửa, xóa và phân quyền cho nhân viên.</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <a asp-controller="Tests" asp-action="Index" class="action-card-link">
+                <div class="action-card">
+                    <i class="fas fa-file-alt action-icon" style="color: var(--success-color-hr);"></i>
+                    <h5 class="action-title">Quản lý Đánh giá & Bài test</h5>
+                    <p class="action-description">Tạo mới, gán bài test và theo dõi kết quả đánh giá.</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,188 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Manager Hub</title>
+
+    <!-- Google Fonts: Lato -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <style>
+        :root {
+            --manager-primary: #1abc9c; /* Xanh mòng két (Teal) */
+            --manager-dark: #34495e; /* Xám đậm */
+            --manager-bg: #ecf0f1; /* Nền xám rất nhạt */
+            --manager-white: #ffffff;
+            --manager-border: #bdc3c7;
+            --manager-text-dark: #2c3e50;
+            --manager-text-light: #ffffff;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: var(--manager-bg);
+        }
+
+        .manager-page-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .manager-header {
+            background-color: var(--manager-white);
+            padding: 0.75rem 2rem;
+            border-bottom: 1px solid #dee2e6;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+        }
+
+            .manager-header .navbar-brand {
+                font-weight: 700;
+                color: var(--manager-primary);
+                font-size: 1.5rem;
+            }
+
+                .manager-header .navbar-brand i {
+                    margin-right: 0.5rem;
+                }
+
+        .user-dropdown .dropdown-toggle::after {
+            display: none;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--manager-primary);
+            color: var(--manager-white);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-left: 10px;
+        }
+
+        /* --- Horizontal Navigation Bar --- */
+        .manager-nav {
+            background-color: var(--manager-dark);
+            padding: 0 2rem;
+        }
+
+            .manager-nav .nav-link {
+                color: rgba(255, 255, 255, 0.75);
+                padding: 1rem 1.25rem;
+                font-weight: 700;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                border-bottom: 4px solid transparent;
+                transition: all 0.2s ease-in-out;
+            }
+
+                .manager-nav .nav-link i {
+                    margin-right: 10px;
+                }
+
+                .manager-nav .nav-link:hover {
+                    color: var(--manager-white);
+                    background-color: rgba(255, 255, 255, 0.05);
+                }
+
+                .manager-nav .nav-link.active {
+                    color: var(--manager-white);
+                    border-bottom-color: var(--manager-primary);
+                }
+
+        /* --- Main Content --- */
+        .manager-main-content {
+            flex-grow: 1;
+            padding: 2.5rem 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="manager-page-wrapper">
+        <!-- HEADER -->
+        <header class="manager-header">
+            <nav class="navbar navbar-expand p-0">
+                <a class="navbar-brand" asp-controller="ManagerDashboard" asp-action="Index">
+                    <i class="fa-solid fa-user-shield"></i>Manager Hub
+                </a>
+
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <div class="ms-auto dropdown user-dropdown">
+                        <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" role="button" data-bs-toggle="dropdown">
+                            <span class="d-none d-sm-inline fw-bold">@User.FindFirst("FullName")?.Value</span>
+                            <div class="user-avatar">
+                                @User.FindFirst("FullName")?.Value?.Substring(0, 1)
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <form asp-controller="Account" asp-action="Logout" method="get">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Đăng xuất
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                }
+            </nav>
+        </header>
+
+        <!-- HORIZONTAL NAVIGATION -->
+        <nav class="manager-nav">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="ManagerDashboard" asp-action="Index">
+                        <i class="fa-solid fa-chart-pie"></i>Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="ManagerDashboard" asp-action="MyTeam">
+                        <i class="fa-solid fa-users-line"></i>My Team
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="ManagerDashboard" asp-action="AssignTest">
+                        <i class="fa-solid fa-file-pen"></i>Assign Test
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="ManagerDashboard" asp-action="ViewResults">
+                        <i class="fa-solid fa-square-poll-vertical"></i>View Results
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="manager-main-content">
+            <div class="container-fluid p-0">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

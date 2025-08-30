@@ -19,14 +19,7 @@
         </div>
     </div>
 
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-    }
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
-    }
+    @* ===== ĐÃ XÓA ĐOẠN HIỂN THỊ THÔNG BÁO Ở ĐÂY ===== *@
 
     <div class="row">
         <!-- Thông tin cá nhân (Dạng chỉ đọc) -->
@@ -85,12 +78,10 @@
                                                 }
                                                 else if (item.IsPassed == false)
                                                 {
-
                                                     <span class="badge badge-danger">Không đạt</span>
                                                 }
                                                 else
                                                 {
-
                                                     <span class="badge badge-secondary">Chưa chấm</span>
                                                 }
                                             </td>
@@ -102,7 +93,6 @@
                     }
                     else
                     {
-
                         <p>Bạn chưa có lịch sử làm bài nào.</p>
                     }
                 </div>

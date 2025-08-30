@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Thống kê Năng lực Cá nhân";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">@ViewData["Title"]</h1>
+
+    <!-- Vùng tìm kiếm nhân viên -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Tìm kiếm Nhân viên</h6>
+        </div>
+        <div class="card-body">
+            <form>
+                <div class="form-group">
+                    <label>Chọn một nhân viên để xem báo cáo chi tiết:</label>
+                    <select class="form-control">
+                        <option>-- Vui lòng chọn --</option>
+                        <!-- Danh sách nhân viên sẽ được tải vào đây -->
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Xem Báo cáo</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Vùng hiển thị kết quả -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Kết quả Năng lực</h6>
+        </div>
+        <div class="card-body">
+            <p>Vui lòng chọn một nhân viên để xem thống kê chi tiết theo từng kỹ năng.</p>
+            <!-- Biểu đồ radar hoặc bảng kỹ năng sẽ được hiển thị ở đây -->
+        </div>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Quay lại trang Báo cáo
+    </a>
+</div>

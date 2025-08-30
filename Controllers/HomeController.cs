@@ -1,6 +1,7 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using TestMaster.Models;
+using Microsoft.AspNetCore.Authorization; // 1. Thêm using này
 
 namespace TestMaster.Controllers
 {
@@ -13,8 +14,12 @@ namespace TestMaster.Controllers
             _logger = logger;
         }
 
+        // 2. Thêm attribute [Authorize] vào đây
+        [Authorize]
         public IActionResult Index()
         {
+            // Bây giờ, chỉ những người dùng đã đăng nhập mới có thể truy cập trang này.
+            // Nếu chưa đăng nhập, họ sẽ được tự động chuyển đến trang Login.
             return View();
         }
 

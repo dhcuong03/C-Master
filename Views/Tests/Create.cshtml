@@ -3,6 +3,16 @@
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Tạo bài test mới";
+    // --- LOGIC CHỌN LAYOUT ---
+    // Tự động chọn layout phù hợp với vai trò của người dùng
+    if (User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_HRLayout.cshtml";
+    }
 }
 
 <div class="container-fluid">
@@ -25,10 +35,22 @@
                             <input asp-for="Test.Title" class="form-control" />
                             <span asp-validation-for="Test.Title" class="text-danger"></span>
                         </div>
+
                         <div class="mb-3">
                             <label asp-for="Test.Description" class="form-label"></label>
                             <textarea asp-for="Test.Description" class="form-control" rows="3"></textarea>
                         </div>
+
+                        <!-- ===== THÊM MỚI: DROPDOWN CHỌN TRÌNH ĐỘ ===== -->
+                        <div class="mb-3">
+                            <label asp-for="Test.LevelId" class="form-label">Trình độ</label>
+                            <select asp-for="Test.LevelId" class="form-select" asp-items="ViewBag.LevelId">
+                                <option value="">-- Chọn trình độ --</option>
+                            </select>
+                            <span asp-validation-for="Test.LevelId" class="text-danger"></span>
+                        </div>
+                        <!-- ============================================= -->
+
                         <div class="row">
                             <div class="col-6 mb-3">
                                 <label asp-for="Test.DurationMinutes" class="form-label">Thời gian (phút)</label>

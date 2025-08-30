@@ -1,0 +1,166 @@
+﻿@{
+    ViewData["Title"] = "Báo cáo & Thống kê";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<!-- CSS cho trang báo cáo -->
+<style>
+    :root {
+        --primary-color-admin: #4e73df;
+        --success-color-admin: #1cc88a;
+        --info-color-admin: #36b9cc;
+        --text-dark-admin: #5a5c69;
+        --text-light-admin: #ffffff;
+    }
+
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--text-dark-admin);
+    }
+
+    .stat-card {
+        background-color: var(--text-light-admin);
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .stat-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        font-size: 1.75rem;
+        color: var(--text-light-admin);
+    }
+
+    .icon-primary {
+        background-color: var(--primary-color-admin);
+    }
+
+    .icon-success {
+        background-color: var(--success-color-admin);
+    }
+
+    .icon-info {
+        background-color: var(--info-color-admin);
+    }
+
+    .stat-content .stat-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #858796;
+        text-transform: uppercase;
+    }
+
+    .stat-content .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-dark-admin);
+    }
+
+    .report-card-link {
+        text-decoration: none;
+    }
+
+    .report-card {
+        background-color: var(--text-light-admin);
+        border-radius: 0.75rem;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+        .report-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.75rem 1.5rem rgba(0,0,0,0.12);
+        }
+
+        .report-card .report-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .report-card .report-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark-admin);
+        }
+</style>
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h1 class="page-title">@ViewData["Title"]</h1>
+    </div>
+
+    <!-- Hàng thẻ thống kê tổng quan -->
+    <div class="row">
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="stat-card">
+                <div class="stat-icon icon-primary"><i class="fas fa-users"></i></div>
+                <div class="stat-content">
+                    <div class="stat-label">Tổng số Người dùng</div>
+                    <div class="stat-value">@ViewData["TotalUsers"]</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="stat-card">
+                <div class="stat-icon icon-success"><i class="fas fa-building"></i></div>
+                <div class="stat-content">
+                    <div class="stat-label">Tổng số Phòng ban</div>
+                    <div class="stat-value">@ViewData["TotalDepartments"]</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="stat-card">
+                <div class="stat-icon icon-info"><i class="fas fa-clipboard-list"></i></div>
+                <div class="stat-content">
+                    <div class="stat-label">Tổng số Bài test</div>
+                    <div class="stat-value">@ViewData["TotalTests"]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hàng thẻ chức năng báo cáo -->
+    <div class="row mt-4">
+        <div class="col-lg-4 mb-4">
+            <a asp-action="ReportByRole" class="report-card-link">
+                <div class="report-card">
+                    <i class="fas fa-user-tag report-icon text-primary"></i>
+                    <h5 class="report-title">Báo cáo theo Vai trò</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-4 mb-4">
+            <a asp-action="ReportByLevel" class="report-card-link">
+                <div class="report-card">
+                    <i class="fas fa-layer-group report-icon text-success"></i>
+                    <h5 class="report-title">Báo cáo theo Cấp độ</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-4 mb-4">
+            <a asp-action="IndividualReport" class="report-card-link">
+                <div class="report-card">
+                    <i class="fas fa-chart-bar report-icon text-info"></i>
+                    <h5 class="report-title">Thống kê Năng lực Cá nhân</h5>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,118 @@
+﻿@model TestMaster.ViewModels.GradingViewModel
+
+@{
+    ViewData["Title"] = "Chấm bài làm";
+    // --- LOGIC CHỌN LAYOUT ---
+    // Tự động chọn layout phù hợp với vai trò của người dùng
+    if (User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_HRLayout.cshtml";
+    }
+}
+
+<div class="container-fluid">
+    <form asp-action="GradeSession" method="post">
+        <input type="hidden" asp-for="Session.SessionId" />
+        <input type="hidden" asp-for="PointsPerEssayQuestion" />
+
+        <!-- Header -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <div>
+                <h1 class="h3 mb-0 text-gray-800">@ViewData["Title"]</h1>
+                <p class="mb-0">
+                    <strong>Bài test:</strong> @Model.Session.Test.Title <br />
+                    <strong>Nhân viên:</strong> @Model.Session.User.FullName
+                </p>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-success shadow-sm">
+                    <i class="fas fa-save fa-sm text-white-50"></i> Lưu điểm & Hoàn tất
+                </button>
+                <a asp-action="Index" class="btn btn-secondary shadow-sm">Hủy</a>
+            </div>
+        </div>
+
+        <!-- Vòng lặp hiển thị các câu trả lời -->
+        @{
+            var sortedUserAnswers = Model.Session.UserAnswers.OrderBy(ua => ua.Question.QuestionId).ToList();
+        }
+
+        @for (int i = 0; i < sortedUserAnswers.Count; i++)
+        {
+            var answer = sortedUserAnswers[i];
+            var question = answer.Question;
+
+            // Tìm GradedAnswerInput tương ứng trong ViewModel
+            var gradedInput = Model.GradedAnswers.FirstOrDefault(g => g.UserAnswerId == answer.UserAnswerId);
+
+            <input type="hidden" name="GradedAnswers[@i].UserAnswerId" value="@answer.UserAnswerId" />
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Câu @(i + 1): @question.Content</h6>
+                </div>
+                <div class="card-body">
+                    @if (question.QuestionType == "ESSAY")
+                    {
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h6 class="small font-weight-bold">Câu trả lời của nhân viên:</h6>
+                                <p class="bg-light p-3 rounded" style="white-space: pre-wrap;">@answer.AnswerText</p>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label font-weight-bold">Đánh giá (Điểm: @Model.PointsPerEssayQuestion.ToString("0.##"))</label>
+
+                                    <!-- === SỬA LỖI: Dùng Radio Button thay cho Checkbox === -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="GradedAnswers[@i].IsCorrect" id="correct-@answer.UserAnswerId" value="true" checked="@(gradedInput?.IsCorrect == true)" />
+                                        <label class="form-check-label" for="correct-@answer.UserAnswerId">
+                                            Đúng
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="GradedAnswers[@i].IsCorrect" id="incorrect-@answer.UserAnswerId" value="false" checked="@(gradedInput?.IsCorrect == false)" />
+                                        <label class="form-check-label" for="incorrect-@answer.UserAnswerId">
+                                            Sai
+                                        </label>
+                                    </div>
+                                    <!-- ================================================= -->
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Ghi chú của người chấm</label>
+                                    <textarea name="GradedAnswers[@i].GraderNotes" class="form-control" rows="2">@gradedInput?.GraderNotes</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else // Câu trắc nghiệm
+                    {
+                        var correctOption = question.AnswerOptions.FirstOrDefault(o => o.IsCorrect == true);
+                        var userOption = question.AnswerOptions.FirstOrDefault(o => o.OptionId == answer.ChosenOptionId);
+                        var isCorrect = correctOption != null && userOption != null && correctOption.OptionId == userOption.OptionId;
+
+                        <dl class="row">
+                            <dt class="col-sm-3">Đáp án đúng:</dt>
+                            <dd class="col-sm-9 text-success font-weight-bold">@(correctOption?.OptionText ?? "N/A")</dd>
+
+                            <dt class="col-sm-3">Nhân viên chọn:</dt>
+                            <dd class="col-sm-9 @(isCorrect ? "text-success" : "text-danger")">
+                                @(userOption?.OptionText ?? "Không trả lời")
+                            </dd>
+
+                            <dt class="col-sm-3">Điểm tự động:</dt>
+                            <dd class="col-sm-9">
+                                @answer.Score?.ToString("0.##")
+                            </dd>
+                        </dl>
+                    }
+                </div>
+            </div>
+        }
+    </form>
+</div>
