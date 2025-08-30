@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TestMaster.Models.Question>
+﻿@model IEnumerable<TestMaster.ViewModels.QuestionIndexViewModel>
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -96,21 +96,38 @@
                             <th>Kỹ năng</th>
                             <th>Độ khó</th>
                             <th>Loại</th>
-                            <th style="width: 150px;">Hành động</th>
+                            <th style="width: 180px;">Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                        @foreach (var viewModel in Model)
                         {
+                            var item = viewModel.Question;
                             <tr>
                                 <td>@Html.DisplayFor(modelItem => item.Content)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Skill.SkillName)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Difficulty)</td>
                                 <td>@Html.DisplayFor(modelItem => item.QuestionType)</td>
                                 <td>
-                                    <a asp-action="Edit" asp-route-id="@item.QuestionId" class="btn btn-warning btn-sm" title="Sửa"><i class="fas fa-edit"></i></a>
-                                    <a asp-action="Details" asp-route-id="@item.QuestionId" class="btn btn-info btn-sm" title="Chi tiết"><i class="fas fa-info-circle"></i></a>
-                                    <a asp-action="Delete" asp-route-id="@item.QuestionId" class="btn btn-danger btn-sm" title="Xóa"><i class="fas fa-trash"></i></a>
+                                    @if (viewModel.IsInUse)
+                                    {
+                                        <!-- Câu hỏi đã được sử dụng: Vô hiệu hóa Sửa/Xóa, hiển thị nút Tạo bản sao -->
+                                        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="Không thể sửa câu hỏi đã được sử dụng. Hãy tạo bản sao.">
+                                            <a class="btn btn-warning btn-sm disabled" style="pointer-events: none;"><i class="fas fa-edit"></i></a>
+                                        </span>
+                                        <a asp-action="Clone" asp-route-id="@item.QuestionId" class="btn btn-primary btn-sm" title="Tạo bản sao"><i class="fas fa-copy"></i></a>
+                                        <a asp-action="Details" asp-route-id="@item.QuestionId" class="btn btn-info btn-sm" title="Chi tiết"><i class="fas fa-info-circle"></i></a>
+                                        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="Không thể xóa câu hỏi đã được sử dụng.">
+                                            <a class="btn btn-danger btn-sm disabled" style="pointer-events: none;"><i class="fas fa-trash"></i></a>
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <!-- Câu hỏi chưa được sử dụng: Các nút hoạt động bình thường -->
+                                        <a asp-action="Edit" asp-route-id="@item.QuestionId" class="btn btn-warning btn-sm" title="Sửa"><i class="fas fa-edit"></i></a>
+                                        <a asp-action="Details" asp-route-id="@item.QuestionId" class="btn btn-info btn-sm" title="Chi tiết"><i class="fas fa-info-circle"></i></a>
+                                        <a asp-action="Delete" asp-route-id="@item.QuestionId" class="btn btn-danger btn-sm" title="Xóa"><i class="fas fa-trash"></i></a>
+                                    }
                                 </td>
                             </tr>
                         }
@@ -119,6 +136,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
 <!-- Import Excel Modal (CHỈ HIỂN THỊ CHO ADMIN) -->
@@ -154,4 +172,14 @@
             </div>
         </div>
     </div>
+}
+
+@section Scripts {
+    <script>
+        // Kích hoạt tooltip của Bootstrap để hiển thị lý do nút bị vô hiệu hóa
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
 }

@@ -15,6 +15,8 @@ namespace TestMaster.ViewModels
     // Lớp này đại diện cho một câu trả lời mà người dùng gửi lên
     public class UserAnswerInput
     {
+        // === TRƯỜNG MỚI ĐÃ ĐƯỢC BỔ SUNG VÀO ĐÂY ===
+        public int SessionId { get; set; }
         public int QuestionId { get; set; }
         public int? ChosenOptionId { get; set; } // Dùng cho câu trắc nghiệm
         public string? AnswerText { get; set; }   // Dùng cho câu tự luận

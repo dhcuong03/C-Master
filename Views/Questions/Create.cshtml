@@ -1,18 +1,10 @@
 ﻿@model TestMaster.Models.Question
 
 @{
+    // ViewData["Title"] sẽ được gán trong Controller, có thể là "Tạo câu hỏi mới" hoặc "Tạo bản sao"
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Tạo câu hỏi mới";
-    // --- LOGIC CHỌN LAYOUT ---
-    // Tự động chọn layout phù hợp với vai trò của người dùng
-    if (User.IsInRole("Admin"))
-    {
-        Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    }
-    else
-    {
-        Layout = "~/Views/Shared/_HRLayout.cshtml";
-    }
+    if (User.IsInRole("Admin")) { Layout = "~/Views/Shared/_AdminLayout.cshtml"; }
+    else { Layout = "~/Views/Shared/_HRLayout.cshtml"; }
 }
 
 <div class="container-fluid">
@@ -73,6 +65,7 @@
             </form>
         </div>
     </div>
+
 </div>
 
 @section Scripts {
@@ -81,35 +74,36 @@
     }
     <script>
         $(document).ready(function () {
-            function reindexOptions() {
-                $("#answerOptionsContainer .answer-option-row").each(function(index) {
-                    $(this).find("input").each(function() {
-                        this.name = this.name.replace(/\[\d+\]/, `[${index}]`);
-                        if ($(this).hasClass("form-control")) {
-                            $(this).attr("placeholder", `Nội dung lựa chọn thứ ${index + 1}`);
-                        }
-                    });
-                });
-            }
-
-            $("#addOptionBtn").click(function () {
-                let optionIndex = $("#answerOptionsContainer .answer-option-row").length;
-                var newOptionRow = `
-                    <div class="input-group mb-2 answer-option-row">
-                        <div class="input-group-text">
-                            <input name="AnswerOptions[${optionIndex}].IsCorrect" class="form-check-input mt-0" type="checkbox" value="true" title="Đánh dấu nếu đây là đáp án đúng"/>
-                            <input type="hidden" name="AnswerOptions[${optionIndex}].IsCorrect" value="false" />
-                        </div>
-                        <input name="AnswerOptions[${optionIndex}].OptionText" class="form-control" placeholder="Nội dung lựa chọn thứ ${optionIndex + 1}" />
-                        <button type="button" class="btn btn-outline-danger remove-option-btn">Xóa</button>
-                    </div>`;
-                $("#answerOptionsContainer").append(newOptionRow);
-            });
-
-            $("#answerOptionsContainer").on("click", ".remove-option-btn", function () {
-                $(this).closest(".answer-option-row").remove();
-                reindexOptions();
-            });
+        function reindexOptions() {
+        $("#answerOptionsContainer .answer-option-row").each(function(index) {
+        (this).find("input").each(function() {
+        this.name = this.name.replace(/\[\\d+\]/, `[${index}]`);
+        if ((this).hasClass("form-control")) {
+        $(this).attr("placeholder", Nội dung lựa chọn thứ ${index + 1});
+        }
         });
+        });
+        }
+
+                $("#addOptionBtn").click(function () {
+                    let optionIndex = $("#answerOptionsContainer .answer-option-row").length;
+                    var newOptionRow = `
+                            <div class="input-group mb-2 answer-option-row">
+                                <div class="input-group-text">
+                                    <input name="AnswerOptions[${optionIndex}].IsCorrect" class="form-check-input mt-0" type="checkbox" value="true" title="Đánh dấu nếu đây là đáp án đúng"/>
+                                    <input type="hidden" name="AnswerOptions[${optionIndex}].IsCorrect" value="false" />
+                                </div>
+                                <input name="AnswerOptions[${optionIndex}].OptionText" class="form-control" placeholder="Nội dung lựa chọn thứ ${optionIndex + 1}" />
+                                <button type="button" class="btn btn-outline-danger remove-option-btn">Xóa</button>
+                            </div>`;
+                    $("#answerOptionsContainer").append(newOptionRow);
+                });
+
+                $("#answerOptionsContainer").on("click", ".remove-option-btn", function () {
+                    $(this).closest(".answer-option-row").remove();
+                    reindexOptions();
+                });
+            });
     </script>
+
 }
