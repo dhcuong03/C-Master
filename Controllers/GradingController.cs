@@ -85,11 +85,9 @@ namespace TestMaster.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GradeSession(GradingViewModel viewModel)
         {
-            // === SỬA LỖI: Hoàn nguyên về "UserId" để lấy ID người chấm bài ===
             var graderIdString = User.FindFirstValue("UserId");
             if (!int.TryParse(graderIdString, out var graderId))
             {
-                // Nếu không tìm thấy UserId, trả về lỗi không có quyền truy cập
                 return Unauthorized();
             }
 
@@ -102,42 +100,39 @@ namespace TestMaster.Controllers
 
             if (sessionToUpdate == null) return NotFound();
 
-            // === LOGIC CHẤM BÀI MỚI - AN TOÀN VÀ CHÍNH XÁC HƠN ===
-
-            // 1. Lấy điểm của các câu trắc nghiệm đã được chấm tự động trước đó.
-            //    Điểm này đã được tính khi người dùng nộp bài.
-            decimal autoGradedScore = sessionToUpdate.UserAnswers
-                .Where(ua => ua.Question.QuestionType != "ESSAY" && ua.Score.HasValue)
-                .Sum(ua => ua.Score.Value);
-
-            // 2. Bắt đầu tổng điểm bằng điểm đã có.
-            decimal totalScore = autoGradedScore;
             int totalQuestions = sessionToUpdate.Test.Questions.Count;
             decimal pointsPerQuestion = (totalQuestions > 0) ? 10.0m / totalQuestions : 0;
 
-            // 3. Chỉ duyệt qua và cập nhật điểm cho các câu tự luận (ESSAY)
+            // 1. Cập nhật điểm và thông tin cho các câu tự luận (ESSAY) vừa được chấm
             foreach (var gradedInput in viewModel.GradedAnswers)
             {
                 var originalAnswer = sessionToUpdate.UserAnswers
                     .FirstOrDefault(ua => ua.UserAnswerId == gradedInput.UserAnswerId);
 
-                // Đảm bảo chỉ cập nhật câu tự luận
                 if (originalAnswer != null && originalAnswer.Question.QuestionType == "ESSAY")
                 {
+                    // Gán điểm cho từng câu tự luận (làm tròn để hiển thị chi tiết nếu cần)
                     originalAnswer.Score = gradedInput.IsCorrect ? pointsPerQuestion : 0;
                     originalAnswer.GraderNotes = gradedInput.GraderNotes;
                     originalAnswer.GradedBy = graderId;
-                    originalAnswer.GradedAt = DateTime.Now;
-
-                    // 4. Cộng điểm của câu tự luận vừa chấm vào tổng điểm
-                    totalScore += originalAnswer.Score.Value;
+                    originalAnswer.GradedAt = DateTime.UtcNow; // Sử dụng giờ UTC cho server
                 }
             }
 
-            // 5. Cập nhật phiên làm bài với tổng điểm cuối cùng
-            sessionToUpdate.FinalScore = Math.Round(totalScore, 2);
+            // 2. TÍNH LẠI ĐIỂM TỔNG KẾT TỪ ĐẦU ĐỂ ĐẢM BẢO CHÍNH XÁC
+            // Đếm tổng số câu trả lời đúng (cả trắc nghiệm và tự luận)
+            int correctAnswersCount = sessionToUpdate.UserAnswers
+                .Count(ua => (ua.Score ?? 0) > 0);
+
+            // Thực hiện một phép tính duy nhất để có điểm cuối cùng
+            decimal finalScore = (totalQuestions > 0)
+                ? ((decimal)correctAnswersCount * 10.0m) / totalQuestions
+                : 0;
+
+            // 3. Cập nhật phiên làm bài với tổng điểm cuối cùng đã được làm tròn
+            sessionToUpdate.FinalScore = Math.Round(finalScore, 2);
             sessionToUpdate.IsPassed = sessionToUpdate.FinalScore >= (sessionToUpdate.Test?.PassingScore ?? 0);
-            sessionToUpdate.Status = "GRADED"; // Chuyển trạng thái sang "Đã chấm"
+            sessionToUpdate.Status = "GRADED";
 
             await _context.SaveChangesAsync();
 
