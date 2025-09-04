@@ -32,6 +32,7 @@
             .sidebar .sidebar-header {
                 padding: 20px;
                 background: #1a252f;
+                text-align: center; /* Căn giữa logo */
             }
 
             .sidebar ul.components {
@@ -89,7 +90,11 @@
         <!-- Thanh điều hướng bên trái (Sidebar) -->
         <nav class="sidebar">
             <div class="sidebar-header">
-                <h3>Admin Panel</h3>
+                <!-- ===== THAY THẾ DÒNG CHỮ BẰNG LOGO ĐỘNG ===== -->
+                <a asp-controller="AdminDashboard" asp-action="Index">
+                    <img src="@await Component.InvokeAsync("LogoUrl")" alt="Logo" style="max-height: 50px;" />
+                </a>
+                <!-- ============================================= -->
             </div>
             <ul class="list-unstyled components">
                 <li>
@@ -195,3 +200,4 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+

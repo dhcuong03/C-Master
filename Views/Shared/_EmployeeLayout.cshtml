@@ -20,7 +20,13 @@
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                    <a class="navbar-brand" asp-area="" asp-controller="EmployeeDashboard" asp-action="Index">TestMaster</a>
+
+                    <!-- ===== THAY THẾ DÒNG CHỮ BẰNG LOGO ĐỘNG TỪ CSDL ===== -->
+                    <a class="navbar-brand" asp-area="" asp-controller="EmployeeDashboard" asp-action="Index">
+                        <img src="@await Component.InvokeAsync("LogoUrl")" alt="Logo" style="max-height: 35px;" />
+                    </a>
+                    <!-- ======================================================= -->
+
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
@@ -102,3 +108,4 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
